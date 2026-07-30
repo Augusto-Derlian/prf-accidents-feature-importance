@@ -1,0 +1,33 @@
+[project]
+name = "prf-accidents-feature-importance"
+version = "0.1.0"
+description = "Preparação, enriquecimento e ranqueamento de atributos de dados de acidentes rodoviários por meio do treinamento de modelos preditivos."
+readme = "README.md"
+authors = [
+    { name = "Vitor Uchikawa", email = "vitor.uchikawa@gmail.com" },
+    { name = "Augusto Derlian", email = "augusto-_-14@hotmail.com" },
+]
+requires-python = "==3.12.*"
+dependencies = [
+    "ipykernel>=7.3.0",
+    "matplotlib>=3.11.0",
+    "numpy>=2.5.1",
+    "openpyxl>=3.1.5",
+    "pandas>=3.0.3",
+    "pyarrow>=25.0.0",
+    "scikit-learn>=1.9.0",
+    "seaborn>=0.13.2",
+    "tqdm>=4.70.0",
+]
+
+[project.scripts]
+prepare-data = "feature_ranking_acidentes.cli.prepare_data:main"
+
+[build-system]
+requires = ["uv_build>=0.11.30,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.0",
+]
