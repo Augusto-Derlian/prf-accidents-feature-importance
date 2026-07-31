@@ -1,0 +1,61 @@
+# 🛣️ Predição de Severidade em Acidentes Rodoviários (CatBoost + SHAP)
+
+![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+![CatBoost](https://img.shields.io/badge/CatBoost-Optimized-yellow.svg)
+![SHAP](https://img.shields.io/badge/SHAP-Explainable_AI-green.svg)
+![DVC](https://img.shields.io/badge/DVC-Data_Version_Control-lightgrey.svg)
+
+## 📌 Visão Geral
+Este repositório contém o framework de fusão de dados e modelagem preditiva desenvolvido para a disciplina de Ciência de Dados (ESE410031 - PPGESE/UFSC). O objetivo é classificar a severidade de acidentes nas rodovias federais da região Sul (2024-2026), relacionando o sinistro às condições da via (ICM) e ao volume de tráfego.
+
+A arquitetura resolve o problema da "caixa-preta" em IA utilizando **CatBoost** para lidar com os dados tabulares e categóricos, e **SHAP (Shapley Additive exPlanations)** para extrair a inferência causal e o impacto de cada feature.
+
+## 🏗️ Arquitetura do Projeto
+
+O desenvolvimento é dividido em dois pipelines independentes:
+
+1. **Pipeline de ETL (Engenharia de Dados):**
+   - Extração e padronização das bases abertas (PRF, DNIT, ANTT).
+   - *Linear Referencing:* Cruzamento geoespacial via `KM` da rodovia para vincular o acidente ao respectivo trecho de tráfego e conservação.
+   - Os dados brutos não são versionados no Git. Utilizamos **DVC** para versionamento de dados pesados.
+
+2. **Pipeline de Modelagem (Ciência de Dados):**
+   - Treinamento do classificador multiclasse (CatBoost).
+   - Avaliação de métricas.
+   - Geração das explicações globais e locais (SHAP).
+
+## � Estrutura do Repositório
+
+- [data/processed/](data/processed/) — dados processados e notebooks de geração do dataset sintético.
+- [src/models/catboost/model/](src/models/catboost/model/) — notebook de treino do CatBoost, resumo do modelo e artefatos gerados.
+- [src/models/catboost/visualizacao/](src/models/catboost/visualizacao/) — notebook de visualização e arquivos de explicabilidade gerados.
+- [src/visualization/](src/visualization/) — scripts auxiliares para visualização e explicabilidade.
+
+## �� Contrato de Dados (Matriz de Treinamento)
+
+A tabela final consolidada (`model_input.csv`), livre de identificadores espaciais diretos para evitar vazamento de dados, respeita a seguinte estrutura:
+
+| Feature | Tipo | Descrição / Domínio |
+| :--- | :--- | :--- |
+| `dia_semana` | Categórica | Segunda, Terça, etc. |
+| `horario` | Categórica | Manhã, Tarde, Noite, Madrugada |
+| `condicao_metereologica`| Categórica | Céu claro, Chuva, Neblina, etc. |
+| `tipo_pista` | Categórica | Simples, Dupla, Múltipla |
+| `inclinacao` | Categórica | Nível, Aclive, Declive |
+| `reta` | Categórica | Reta, Curva |
+| `volume_pedagio` | Numérica | Volume Diário Médio (VDM) do trecho |
+| `icm_via` | Numérica | Índice de Condição de Manutenção (DNIT) |
+| `classificacao_acidente` | Categórica (Alvo) | Sem vítimas, Leves, Graves/Fatais |
+
+## 🚀 Como Executar o Projeto
+
+### 1. Como Rodar com dados dummy:
+1. rode o dummy_input.ipynb para gerar o dataset sintético
+2. rode o catboost_training.ipynb para treinar o modelo
+3. rode o catboost_visualizacao.ipynb para gerar as explicações SHAP
+
+### 2. Como rodar com dados reais:
+1. Baixe os dados abertos da PRF, DNIT e ANTT.
+2. Execute o pipeline de ETL para processar os dados.
+3. Rode o notebook de treinamento do CatBoost.
+4. Execute o notebook de visualização e explicabilidade do SHAP.
