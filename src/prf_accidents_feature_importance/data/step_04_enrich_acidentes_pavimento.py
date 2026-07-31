@@ -21,6 +21,7 @@ ARQUIVO_SAIDA = (
 
 COLUNAS_LOCALIZACAO = ["uf", "br"]
 SENTIDOS_CONHECIDOS = ["crescente", "decrescente"]
+DISTANCIA_MAXIMA_TRECHO_KM = 10
 
 
 def preparar_trechos_pavimento(pavimento: pd.DataFrame) -> pd.DataFrame:
@@ -136,7 +137,7 @@ def criar_consultas_de_acidentes(acidentes: pd.DataFrame) -> pd.DataFrame:
     return consultas
 
 
-def encontrar_icm_dos_acidentes(
+def encontrar_icm_exato(
     acidentes: pd.DataFrame,
     trechos: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -242,6 +243,211 @@ def encontrar_icm_dos_acidentes(
     return melhores_candidatos[["_indice_acidente", "icm"]]
 
 
+def encontrar_trechos_mais_proximos(
+    consultas: pd.DataFrame,
+    trechos: pd.DataFrame,
+    considerar_sentido: bool,
+) -> pd.DataFrame:
+    """Encontra o trecho anterior ou posterior mais próximo de cada km."""
+    colunas_do_trecho = [
+        *COLUNAS_LOCALIZACAO,
+        "sentido_pavimento",
+        "km_menor",
+        "km_maior",
+    ]
+    locais_dos_trechos = trechos[colunas_do_trecho].drop_duplicates()
+    consultas = consultas.copy()
+
+    # Os arquivos podem representar as chaves com tipos internos diferentes.
+    # Usar os mesmos tipos evita incompatibilidades durante o cruzamento.
+    consultas["uf"] = consultas["uf"].astype("object")
+    locais_dos_trechos["uf"] = locais_dos_trechos["uf"].astype("object")
+    consultas["br"] = consultas["br"].astype("int64")
+    locais_dos_trechos["br"] = locais_dos_trechos["br"].astype("int64")
+    consultas["sentido_acidente"] = consultas["sentido_acidente"].astype(
+        "object"
+    )
+    locais_dos_trechos["sentido_pavimento"] = locais_dos_trechos[
+        "sentido_pavimento"
+    ].astype("object")
+
+    if considerar_sentido:
+        consultas = consultas[
+            consultas["sentido_acidente"].isin(SENTIDOS_CONHECIDOS)
+        ]
+        chaves_consulta = [
+            *COLUNAS_LOCALIZACAO,
+            "sentido_acidente",
+        ]
+        chaves_trecho = [
+            *COLUNAS_LOCALIZACAO,
+            "sentido_pavimento",
+        ]
+    else:
+        chaves_consulta = COLUNAS_LOCALIZACAO
+        chaves_trecho = COLUNAS_LOCALIZACAO
+
+    if consultas.empty or locais_dos_trechos.empty:
+        return pd.DataFrame()
+
+    # Para cada acidente, procura-se um trecho antes e outro depois de seu km.
+    # Depois, a distância até os limites desses dois trechos decide o mais perto.
+    consultas_ordenadas = consultas.sort_values("km")
+
+    trechos_anteriores = pd.merge_asof(
+        consultas_ordenadas,
+        locais_dos_trechos.sort_values("km_maior"),
+        left_on="km",
+        right_on="km_maior",
+        left_by=chaves_consulta,
+        right_by=chaves_trecho,
+        direction="backward",
+    )
+    trechos_posteriores = pd.merge_asof(
+        consultas_ordenadas,
+        locais_dos_trechos.sort_values("km_menor"),
+        left_on="km",
+        right_on="km_menor",
+        left_by=chaves_consulta,
+        right_by=chaves_trecho,
+        direction="forward",
+    )
+
+    candidatos = pd.concat(
+        [trechos_anteriores, trechos_posteriores],
+        ignore_index=True,
+    ).dropna(subset=["km_menor", "km_maior"])
+    if candidatos.empty:
+        return candidatos
+
+    distancia_antes_do_trecho = (
+        candidatos["km_menor"] - candidatos["km"]
+    ).clip(lower=0)
+    distancia_depois_do_trecho = (
+        candidatos["km"] - candidatos["km_maior"]
+    ).clip(lower=0)
+    candidatos["distancia_trecho_km"] = (
+        distancia_antes_do_trecho + distancia_depois_do_trecho
+    )
+    candidatos = candidatos[
+        candidatos["distancia_trecho_km"] <= DISTANCIA_MAXIMA_TRECHO_KM
+    ]
+
+    return (
+        candidatos.sort_values(
+            [
+                "_indice_acidente",
+                "distancia_trecho_km",
+                "km_menor",
+                "km_maior",
+            ],
+            kind="stable",
+        )
+        .drop_duplicates("_indice_acidente")
+    )
+
+
+def buscar_icm_nos_trechos(
+    acidentes_com_trecho: pd.DataFrame,
+    trechos: pd.DataFrame,
+) -> pd.DataFrame:
+    """Busca a avaliação temporalmente mais próxima nos trechos escolhidos."""
+    if acidentes_com_trecho.empty:
+        return pd.DataFrame(columns=["_indice_acidente", "icm"])
+
+    colunas_chave = [
+        *COLUNAS_LOCALIZACAO,
+        "sentido_pavimento",
+        "km_menor",
+        "km_maior",
+    ]
+    medicoes = trechos[
+        [
+            *colunas_chave,
+            "data_avaliacao_pavimento",
+            "icm",
+        ]
+    ].drop_duplicates()
+    candidatos = acidentes_com_trecho.merge(
+        medicoes,
+        on=colunas_chave,
+        how="inner",
+    )
+    candidatos["distancia_dias"] = (
+        candidatos["data_acidente"]
+        - candidatos["data_avaliacao_pavimento"]
+    ).abs().dt.days
+
+    melhores_candidatos = (
+        candidatos.sort_values(
+            [
+                "_indice_acidente",
+                "distancia_dias",
+                "data_avaliacao_pavimento",
+            ],
+            kind="stable",
+        )
+        .drop_duplicates("_indice_acidente")
+    )
+
+    return melhores_candidatos[["_indice_acidente", "icm"]]
+
+
+def encontrar_icm_dos_acidentes(
+    acidentes: pd.DataFrame,
+    trechos: pd.DataFrame,
+) -> pd.DataFrame:
+    """Encontra o ICM exato ou, como alternativa, o trecho mais próximo."""
+    resultados_exatos = encontrar_icm_exato(acidentes, trechos)
+    consultas = criar_consultas_de_acidentes(acidentes)
+
+    # Primeiro fallback: mantém UF, BR e sentido, alterando apenas o km.
+    consultas_pendentes = consultas[
+        ~consultas["_indice_acidente"].isin(
+            resultados_exatos["_indice_acidente"]
+        )
+    ]
+    trechos_mesmo_sentido = encontrar_trechos_mais_proximos(
+        consultas_pendentes,
+        trechos,
+        considerar_sentido=True,
+    )
+    resultados_mesmo_sentido = buscar_icm_nos_trechos(
+        trechos_mesmo_sentido,
+        trechos,
+    )
+
+    # Segundo fallback: usado quando não há trecho aceitável no mesmo sentido.
+    indices_encontrados = pd.concat(
+        [
+            resultados_exatos["_indice_acidente"],
+            resultados_mesmo_sentido["_indice_acidente"],
+        ],
+        ignore_index=True,
+    )
+    consultas_pendentes = consultas[
+        ~consultas["_indice_acidente"].isin(indices_encontrados)
+    ]
+    trechos_qualquer_sentido = encontrar_trechos_mais_proximos(
+        consultas_pendentes,
+        trechos,
+        considerar_sentido=False,
+    )
+    resultados_qualquer_sentido = buscar_icm_nos_trechos(
+        trechos_qualquer_sentido,
+        trechos,
+    )
+
+    return pd.concat(
+        [
+            resultados_exatos,
+            resultados_mesmo_sentido,
+            resultados_qualquer_sentido,
+        ],
+        ignore_index=True,
+    )
+
+
 def enriquecer_acidentes(
     acidentes: pd.DataFrame,
     pavimento: pd.DataFrame,
@@ -296,6 +502,10 @@ def main() -> None:
         "Acidentes com ICM: %s (%.2f%%)",
         quantidade_com_icm,
         percentual_com_icm,
+    )
+    logger.info(
+        "Limite do fallback por distância: %s km",
+        DISTANCIA_MAXIMA_TRECHO_KM,
     )
     logger.info("Arquivo salvo em: %s", ARQUIVO_SAIDA)
 
