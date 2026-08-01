@@ -27,7 +27,7 @@ def criar_volume_mensal(pedagios: pd.DataFrame) -> pd.DataFrame:
             ["mes_ano", *COLUNAS_LOCALIZACAO],
             as_index=False,
         )
-        .agg(volume_pedagio_mais_proximo=("volume_total", "sum"))
+        .agg(volume_pedagio=("volume_total", "sum"))
         .rename(
             columns={
                 "mes_ano": "mes_volume",
@@ -99,7 +99,7 @@ def encontrar_volumes_mais_proximos(
     volumes_mais_proximos = candidatos.sort_values(
         ["distancia_meses", "mes_volume"],
     ).drop_duplicates(colunas_consulta)[
-        colunas_consulta + ["volume_pedagio_mais_proximo"]
+        colunas_consulta + ["volume_pedagio"]
     ]
 
     return volumes_mais_proximos
@@ -137,7 +137,7 @@ def enriquecer_acidentes(
         validate="many_to_one",
     )
 
-    return resultado[colunas_originais + ["volume_pedagio_mais_proximo"]]
+    return resultado[colunas_originais + ["volume_pedagio"]]
 
 
 def main() -> None:
@@ -155,7 +155,7 @@ def main() -> None:
     ARQUIVO_SAIDA.parent.mkdir(parents=True, exist_ok=True)
     resultado.to_parquet(ARQUIVO_SAIDA, index=False)
 
-    quantidade_com_volume = int(resultado["volume_pedagio_mais_proximo"].notna().sum())
+    quantidade_com_volume = int(resultado["volume_pedagio"].notna().sum())
     percentual_com_volume = (
         quantidade_com_volume / len(resultado) * 100 if len(resultado) else 0
     )
