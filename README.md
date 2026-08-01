@@ -49,12 +49,29 @@ A tabela final consolidada (`model_input.csv`), livre de identificadores espacia
 
 ## 🚀 Como Executar o Projeto
 
-### 1. Como Rodar com dados dummy:
+### 1. Pré-requisitos:
+Adicione um environment Python 3.12.*:
+> py -3.12 -m venv .venv
+
+Ative-o:
+- Windows:
+> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+A linha acima é necessária para permitir a execução de scripts PowerShell no Windows. Em seguida, ative o ambiente virtual:
+> .venv\Scripts\activate.ps1
+
+Atualize o pip e instale as dependências:
+> python -m pip install --upgrade pip
+> pip install -e
+
+Registre o environment no Jupyter:
+> python -m ipykernel install --user --name=.venv
+
+### 2. Como Rodar com dados dummy:
 1. rode o dummy_input.ipynb para gerar o dataset sintético
 2. rode o catboost_training.ipynb para treinar o modelo
 3. rode o catboost_visualizacao.ipynb para gerar as explicações SHAP
 
-### 2. Como rodar com dados reais:
+### 3. Como rodar com dados reais:
 1. Baixe os dados abertos da PRF, DNIT e ANTT.
 2. Execute o pipeline de ETL para processar os dados.
 3. Rode o notebook de treinamento do CatBoost.
