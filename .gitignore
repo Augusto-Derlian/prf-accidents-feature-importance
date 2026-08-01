@@ -45,7 +45,6 @@ profile_default/
 ipython_config.py
 
 # Project data and generated datasets
-/data/
 *.csv
 *.xlsx
 *.parquet
