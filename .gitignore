@@ -48,6 +48,7 @@ ipython_config.py
 *.csv
 *.xlsx
 *.parquet
+*.geojson
 
 # Editors
 .vscode/*
@@ -62,6 +63,7 @@ Thumbs.db
 # Logs
 *.log
 logs/
+reports/
 
 # Backup files
 *.bak

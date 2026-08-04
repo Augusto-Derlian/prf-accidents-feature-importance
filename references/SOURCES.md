@@ -162,3 +162,9 @@ General source: open data from the Brazilian Federal Highway Police.
 - [March](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/c71e0a12-be02-48ff-9eea-9a3c31b234b0/download/icm_03_2021.csv)
 - [February](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/a8d22a62-0013-4952-ac79-938a9a02a005/download/icm_fev_2021.csv)
 - [January](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/151829dd-3af6-4d03-9cbb-d05af8e4bc31/download/icm_01_2021.xlsx)
+
+## IBGE
+
+### malha_estados
+
+- [2025](https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?formato=application/vnd.geo+json&qualidade=minima&intrarregiao=UF)
