@@ -16,10 +16,7 @@ ANO_INICIAL = 2023
 ANO_FINAL = 2026
 
 DIRETORIO_ENTRADA = DIRETORIO_DADOS_BRUTOS / "antt" / "pedagio_volume"
-ARQUIVO_SAIDA = (
-    DIRETORIO_DADOS_INTERMEDIARIOS
-    / "01_pedagio_volume_concat.parquet"
-)
+ARQUIVO_SAIDA = DIRETORIO_DADOS_INTERMEDIARIOS / "01_pedagio_volume_concat.parquet"
 
 ALIAS_COLUNAS = {
     "categoria": "categoria_eixo",

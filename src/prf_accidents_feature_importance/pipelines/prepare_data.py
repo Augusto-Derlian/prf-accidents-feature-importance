@@ -15,7 +15,7 @@ ETAPAS = {
     "01c_concatenar_acidentes": step_01c_concat_acidentes_ocorrencia.main,
     "02_enriquecer_pedagio": step_02_enrich_pedagio_volume.main,
     "03_enriquecer_acidentes": step_03_enrich_acidentes_praca.main,
-    "04_enriquecer_acidentes": step_04_enrich_acidentes_pavimento.main
+    "04_enriquecer_acidentes": step_04_enrich_acidentes_pavimento.main,
 }
 
 

@@ -11,10 +11,7 @@ from prf_accidents_feature_importance.config import (
 
 logger = logging.getLogger(__name__)
 
-ARQUIVO_VOLUME = (
-    DIRETORIO_DADOS_INTERMEDIARIOS
-    / "01_pedagio_volume_concat.parquet"
-)
+ARQUIVO_VOLUME = DIRETORIO_DADOS_INTERMEDIARIOS / "01_pedagio_volume_concat.parquet"
 ARQUIVO_PRACAS = (
     DIRETORIO_DADOS_BRUTOS
     / "antt"
@@ -22,10 +19,7 @@ ARQUIVO_PRACAS = (
     / "2026"
     / "praca_pedagio_2026_05.csv"
 )
-ARQUIVO_SAIDA = (
-    DIRETORIO_DADOS_INTERMEDIARIOS
-    / "02_pedagio_volume_enriched.parquet"
-)
+ARQUIVO_SAIDA = DIRETORIO_DADOS_INTERMEDIARIOS / "02_pedagio_volume_enriched.parquet"
 
 ALIAS_CONCESSIONARIAS = {
     "autopista fernao dias": "motiva minas sp",
@@ -151,7 +145,7 @@ def main() -> None:
 
     correspondencias = int(resultado["br"].notna().sum())
     percentual = correspondencias / len(resultado) * 100 if len(resultado) else 0
-    
+
     logger.info("\n=== Enriquecimento dos dados de volume com praça ===")
     logger.info("Registros de entrada: %s", quantidade_original)
     logger.info("Registros de saída: %s", len(resultado))

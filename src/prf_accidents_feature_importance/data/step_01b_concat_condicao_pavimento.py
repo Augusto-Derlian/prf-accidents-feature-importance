@@ -13,10 +13,7 @@ from prf_accidents_feature_importance.config import (
 logger = logging.getLogger(__name__)
 
 DIRETORIO_ENTRADA = DIRETORIO_DADOS_BRUTOS / "dnit" / "condicao_pavimento"
-ARQUIVO_SAIDA = (
-    DIRETORIO_DADOS_INTERMEDIARIOS
-    / "01_condicao_pavimento_concat.parquet"
-)
+ARQUIVO_SAIDA = DIRETORIO_DADOS_INTERMEDIARIOS / "01_condicao_pavimento_concat.parquet"
 
 ALIAS_COLUNAS = {
     "data_aval": "data_inversa",

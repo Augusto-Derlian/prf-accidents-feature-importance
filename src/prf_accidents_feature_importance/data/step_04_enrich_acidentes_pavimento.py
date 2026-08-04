@@ -66,9 +66,7 @@ def preparar_trechos_pavimento(pavimento: pd.DataFrame) -> pd.DataFrame:
     trechos["sentido_pavimento"] = trechos["sentido_via"].fillna(
         sentido_pela_ordem_dos_kms
     )
-    trechos = trechos.rename(
-        columns={"data_inversa": "data_avaliacao_pavimento"}
-    )
+    trechos = trechos.rename(columns={"data_inversa": "data_avaliacao_pavimento"})
 
     # Pode haver mais de uma medição para o mesmo trecho na mesma data.
     # A média produz um único ICM para cada combinação.
@@ -79,15 +77,12 @@ def preparar_trechos_pavimento(pavimento: pd.DataFrame) -> pd.DataFrame:
         "km_maior",
         "data_avaliacao_pavimento",
     ]
-    trechos = (
-        trechos.groupby(
-            colunas_do_trecho,
-            as_index=False,
-            dropna=False,
-            sort=False,
-        )
-        .agg(icm=("icm", "mean"))
-    )
+    trechos = trechos.groupby(
+        colunas_do_trecho,
+        as_index=False,
+        dropna=False,
+        sort=False,
+    ).agg(icm=("icm", "mean"))
 
     # O km inteiro funciona como uma chave auxiliar para evitar comparar cada
     # acidente com todos os milhões de trechos disponíveis.
@@ -114,9 +109,7 @@ def preparar_trechos_pavimento(pavimento: pd.DataFrame) -> pd.DataFrame:
 
 def criar_consultas_de_acidentes(acidentes: pd.DataFrame) -> pd.DataFrame:
     """Seleciona os dados necessários para localizar o ICM de cada acidente."""
-    consultas = acidentes[
-        ["uf", "br", "km", "sentido_via", "data_inversa"]
-    ].copy()
+    consultas = acidentes[["uf", "br", "km", "sentido_via", "data_inversa"]].copy()
     consultas.insert(0, "_indice_acidente", np.arange(len(consultas)))
     consultas = consultas.dropna(subset=["uf", "br", "km", "data_inversa"])
     consultas = consultas.rename(
@@ -180,10 +173,9 @@ def encontrar_icm_exato(
 
     # Confirma que o km do acidente realmente está dentro do trecho. A chave
     # inteira usada no merge apenas reduz o número de comparações necessárias.
-    trecho_pontual = (
-        candidatos["km_menor"].eq(candidatos["km_maior"])
-        & candidatos["km"].eq(candidatos["km_menor"])
-    )
+    trecho_pontual = candidatos["km_menor"].eq(candidatos["km_maior"]) & candidatos[
+        "km"
+    ].eq(candidatos["km_menor"])
     dentro_do_trecho_crescente = (
         candidatos["sentido_acidente"].eq("crescente")
         & candidatos["km"].ge(candidatos["km_menor"])
@@ -194,15 +186,10 @@ def encontrar_icm_exato(
         & candidatos["km"].gt(candidatos["km_menor"])
         & candidatos["km"].le(candidatos["km_maior"])
     )
-    sem_sentido_informado = ~candidatos["sentido_acidente"].isin(
-        SENTIDOS_CONHECIDOS
-    )
-    dentro_do_trecho_sem_sentido = (
-        sem_sentido_informado
-        & candidatos["km"].between(
-            candidatos["km_menor"],
-            candidatos["km_maior"],
-        )
+    sem_sentido_informado = ~candidatos["sentido_acidente"].isin(SENTIDOS_CONHECIDOS)
+    dentro_do_trecho_sem_sentido = sem_sentido_informado & candidatos["km"].between(
+        candidatos["km_menor"],
+        candidatos["km_maior"],
     )
 
     candidatos = candidatos[
@@ -215,30 +202,26 @@ def encontrar_icm_exato(
         return pd.DataFrame(columns=["_indice_acidente", "icm"])
 
     candidatos["distancia_dias"] = (
-        candidatos["data_acidente"]
-        - candidatos["data_avaliacao_pavimento"]
-    ).abs().dt.days
-    candidatos["centro_trecho"] = (
-        candidatos["km_menor"] + candidatos["km_maior"]
-    ) / 2
+        (candidatos["data_acidente"] - candidatos["data_avaliacao_pavimento"])
+        .abs()
+        .dt.days
+    )
+    candidatos["centro_trecho"] = (candidatos["km_menor"] + candidatos["km_maior"]) / 2
     candidatos["distancia_centro_trecho"] = (
         candidatos["km"] - candidatos["centro_trecho"]
     ).abs()
 
     # A avaliação mais próxima da data do acidente é escolhida. Se houver
     # empate, vence o trecho com centro mais próximo e depois a data anterior.
-    melhores_candidatos = (
-        candidatos.sort_values(
-            [
-                "_indice_acidente",
-                "distancia_dias",
-                "distancia_centro_trecho",
-                "data_avaliacao_pavimento",
-            ],
-            kind="stable",
-        )
-        .drop_duplicates("_indice_acidente")
-    )
+    melhores_candidatos = candidatos.sort_values(
+        [
+            "_indice_acidente",
+            "distancia_dias",
+            "distancia_centro_trecho",
+            "data_avaliacao_pavimento",
+        ],
+        kind="stable",
+    ).drop_duplicates("_indice_acidente")
 
     return melhores_candidatos[["_indice_acidente", "icm"]]
 
@@ -264,17 +247,13 @@ def encontrar_trechos_mais_proximos(
     locais_dos_trechos["uf"] = locais_dos_trechos["uf"].astype("object")
     consultas["br"] = consultas["br"].astype("int64")
     locais_dos_trechos["br"] = locais_dos_trechos["br"].astype("int64")
-    consultas["sentido_acidente"] = consultas["sentido_acidente"].astype(
-        "object"
-    )
+    consultas["sentido_acidente"] = consultas["sentido_acidente"].astype("object")
     locais_dos_trechos["sentido_pavimento"] = locais_dos_trechos[
         "sentido_pavimento"
     ].astype("object")
 
     if considerar_sentido:
-        consultas = consultas[
-            consultas["sentido_acidente"].isin(SENTIDOS_CONHECIDOS)
-        ]
+        consultas = consultas[consultas["sentido_acidente"].isin(SENTIDOS_CONHECIDOS)]
         chaves_consulta = [
             *COLUNAS_LOCALIZACAO,
             "sentido_acidente",
@@ -320,12 +299,12 @@ def encontrar_trechos_mais_proximos(
     if candidatos.empty:
         return candidatos
 
-    distancia_antes_do_trecho = (
-        candidatos["km_menor"] - candidatos["km"]
-    ).clip(lower=0)
-    distancia_depois_do_trecho = (
-        candidatos["km"] - candidatos["km_maior"]
-    ).clip(lower=0)
+    distancia_antes_do_trecho = (candidatos["km_menor"] - candidatos["km"]).clip(
+        lower=0
+    )
+    distancia_depois_do_trecho = (candidatos["km"] - candidatos["km_maior"]).clip(
+        lower=0
+    )
     candidatos["distancia_trecho_km"] = (
         distancia_antes_do_trecho + distancia_depois_do_trecho
     )
@@ -333,18 +312,15 @@ def encontrar_trechos_mais_proximos(
         candidatos["distancia_trecho_km"] <= DISTANCIA_MAXIMA_TRECHO_KM
     ]
 
-    return (
-        candidatos.sort_values(
-            [
-                "_indice_acidente",
-                "distancia_trecho_km",
-                "km_menor",
-                "km_maior",
-            ],
-            kind="stable",
-        )
-        .drop_duplicates("_indice_acidente")
-    )
+    return candidatos.sort_values(
+        [
+            "_indice_acidente",
+            "distancia_trecho_km",
+            "km_menor",
+            "km_maior",
+        ],
+        kind="stable",
+    ).drop_duplicates("_indice_acidente")
 
 
 def buscar_icm_nos_trechos(
@@ -374,21 +350,19 @@ def buscar_icm_nos_trechos(
         how="inner",
     )
     candidatos["distancia_dias"] = (
-        candidatos["data_acidente"]
-        - candidatos["data_avaliacao_pavimento"]
-    ).abs().dt.days
-
-    melhores_candidatos = (
-        candidatos.sort_values(
-            [
-                "_indice_acidente",
-                "distancia_dias",
-                "data_avaliacao_pavimento",
-            ],
-            kind="stable",
-        )
-        .drop_duplicates("_indice_acidente")
+        (candidatos["data_acidente"] - candidatos["data_avaliacao_pavimento"])
+        .abs()
+        .dt.days
     )
+
+    melhores_candidatos = candidatos.sort_values(
+        [
+            "_indice_acidente",
+            "distancia_dias",
+            "data_avaliacao_pavimento",
+        ],
+        kind="stable",
+    ).drop_duplicates("_indice_acidente")
 
     return melhores_candidatos[["_indice_acidente", "icm"]]
 
@@ -403,9 +377,7 @@ def encontrar_icm_dos_acidentes(
 
     # Primeiro fallback: mantém UF, BR e sentido, alterando apenas o km.
     consultas_pendentes = consultas[
-        ~consultas["_indice_acidente"].isin(
-            resultados_exatos["_indice_acidente"]
-        )
+        ~consultas["_indice_acidente"].isin(resultados_exatos["_indice_acidente"])
     ]
     trechos_mesmo_sentido = encontrar_trechos_mais_proximos(
         consultas_pendentes,

@@ -18,8 +18,7 @@ DATA_CORTE = pd.Timestamp("2023-11-01")
 
 DIRETORIO_ENTRADA = DIRETORIO_DADOS_BRUTOS / "prf" / "acidentes_ocorrencia"
 ARQUIVO_SAIDA = (
-    DIRETORIO_DADOS_INTERMEDIARIOS
-    / "01_acidentes_ocorrencia_concat.parquet"
+    DIRETORIO_DADOS_INTERMEDIARIOS / "01_acidentes_ocorrencia_concat.parquet"
 )
 
 ALIAS_COLUNAS = {

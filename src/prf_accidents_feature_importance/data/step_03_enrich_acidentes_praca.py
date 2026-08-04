@@ -98,9 +98,7 @@ def encontrar_volumes_mais_proximos(
     # Em caso de empate, ordenar também pelo mês faz o mês anterior ser usado.
     volumes_mais_proximos = candidatos.sort_values(
         ["distancia_meses", "mes_volume"],
-    ).drop_duplicates(colunas_consulta)[
-        colunas_consulta + ["volume_pedagio"]
-    ]
+    ).drop_duplicates(colunas_consulta)[colunas_consulta + ["volume_pedagio"]]
 
     return volumes_mais_proximos
 

@@ -115,6 +115,7 @@ DIA_DA_SEMANA_PARA_NUMERO = {
     "domingo": 6,
 }
 
+
 def remover_colunas_nao_preditivas(acidentes: pd.DataFrame) -> pd.DataFrame:
     """Remove identificadores, localização direta e vazamentos do alvo."""
     return acidentes.drop(columns=COLUNAS_PARA_REMOVER)
@@ -124,9 +125,7 @@ def criar_fator_humano(acidentes: pd.DataFrame) -> pd.DataFrame:
     """Indica se a causa registrada está associada a um fator humano."""
     resultado = acidentes.copy()
     resultado["fator_humano"] = (
-        resultado.pop("causa_acidente")
-        .isin(CAUSAS_DE_FATOR_HUMANO)
-        .astype("int8")
+        resultado.pop("causa_acidente").isin(CAUSAS_DE_FATOR_HUMANO).astype("int8")
     )
     return resultado
 
