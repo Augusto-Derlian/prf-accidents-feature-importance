@@ -64,6 +64,7 @@ Thumbs.db
 *.log
 logs/
 reports/
+models/
 
 # Backup files
 *.bak

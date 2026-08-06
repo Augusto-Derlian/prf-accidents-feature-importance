@@ -76,3 +76,21 @@ Registre o environment no Jupyter:
 2. Execute o pipeline de ETL para processar os dados.
 3. Rode o notebook de treinamento do CatBoost.
 4. Execute o notebook de visualização e explicabilidade do SHAP.
+
+### Treinamento reproduzível do CatBoost
+
+Depois de gerar `data/03_processed/acidentes_features.parquet`, execute:
+
+```powershell
+train-model
+```
+
+Também é possível executar diretamente pelo módulo Python:
+
+```powershell
+python -m prf_accidents_feature_importance.cli.train_model
+```
+
+O pipeline usa divisões estratificadas de treino, validação e teste, balanceia as
+classes e aplica parada antecipada. Os artefatos são gravados em
+`models/catboost/`: `modelo.cbm`, `metrics.json` e `feature_importance.csv`.
