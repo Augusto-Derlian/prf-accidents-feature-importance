@@ -1,4 +1,7 @@
 """Padroniza e concatena os arquivos anuais de acidentes da PRF."""
+"""Baixe os arquivos PRF listados em references/SOURCES.md para data/01_raw/prf/acidentes_ocorrencia e renomeie como acidentes_ocorrencia_YYYY."""
+
+from pathlib import Path
 
 import logging
 
@@ -74,6 +77,29 @@ COLUNAS_INTEIRAS = [
 COLUNAS_DECIMAIS = ["km", "latitude", "longitude"]
 
 
+def localizar_arquivos_acidentes() -> list[Path]:
+    if not DIRETORIO_ENTRADA.exists():
+        raise FileNotFoundError(
+            f"Diretório de entrada ausente: {DIRETORIO_ENTRADA}"
+        )
+
+    arquivos = []
+    for arquivo in DIRETORIO_ENTRADA.rglob("acidentes_ocorrencia_*"):
+        ano_texto = arquivo.stem.removeprefix("acidentes_ocorrencia_")
+        if arquivo.is_file() and ano_texto.isdigit():
+            ano = int(ano_texto)
+            if ANO_INICIAL <= ano <= ANO_FINAL:
+                arquivos.append(arquivo)
+
+    arquivos.sort()
+    if not arquivos:
+        raise FileNotFoundError(
+            f"Nenhum arquivo acidentes_ocorrencia_* encontrado em {DIRETORIO_ENTRADA}."
+        )
+
+    return arquivos
+
+
 def normalizar_colunas(dados: pd.DataFrame) -> pd.DataFrame:
     """Padroniza os nomes e seleciona as colunas usadas no projeto."""
     dados = dados.copy()
@@ -146,14 +172,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     logger.info("=== Concatenação dos acidentes (PRF) ===")
 
-    arquivos = []
-    for arquivo in DIRETORIO_ENTRADA.rglob("acidentes_ocorrencia_*"):
-        ano_texto = arquivo.stem.removeprefix("acidentes_ocorrencia_")
-        if arquivo.is_file() and ano_texto.isdigit():
-            ano = int(ano_texto)
-            if ANO_INICIAL <= ano <= ANO_FINAL:
-                arquivos.append(arquivo)
-    arquivos.sort()
+    arquivos = localizar_arquivos_acidentes()
 
     tabelas_normalizadas = []
     for arquivo in tqdm(

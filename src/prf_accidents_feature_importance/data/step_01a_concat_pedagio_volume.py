@@ -1,4 +1,7 @@
 """Padroniza e concatena os arquivos anuais de volume de pedágio da ANTT."""
+"""Download os CSVs da ANTT listados em references/SOURCES.md para data/01_raw/antt/pedagio_volume e renomeie como pedagio_volume_YYYY.csv."""
+
+from pathlib import Path
 
 import logging
 
@@ -49,6 +52,30 @@ COLUNAS_NUMERICAS = [
     "multiplicador_de_tarifa",
     "volume_veiculo_equivalente",
 ]
+
+
+def localizar_arquivos_pedagio() -> list[Path]:
+    if not DIRETORIO_ENTRADA.exists():
+        raise FileNotFoundError(
+            f"Diretório de entrada ausente: {DIRETORIO_ENTRADA}"
+        )
+
+    arquivos = sorted(
+        arquivo
+        for arquivo in DIRETORIO_ENTRADA.rglob("pedagio_volume_*")
+        if arquivo.is_file()
+        and arquivo.stem.removeprefix("pedagio_volume_").isdigit()
+        and ANO_INICIAL
+        <= int(arquivo.stem.removeprefix("pedagio_volume_"))
+        <= ANO_FINAL
+    )
+
+    if not arquivos:
+        raise FileNotFoundError(
+            f"Nenhum arquivo pedagio_volume_* encontrado em {DIRETORIO_ENTRADA}."
+        )
+
+    return arquivos
 
 
 def normalizar_colunas(dados: pd.DataFrame) -> pd.DataFrame:
@@ -122,15 +149,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     logger.info("=== Concatenação do volume de pedágio (ANTT) ===")
 
-    arquivos = sorted(
-        arquivo
-        for arquivo in DIRETORIO_ENTRADA.rglob("pedagio_volume_*")
-        if arquivo.is_file()
-        and arquivo.stem.removeprefix("pedagio_volume_").isdigit()
-        and ANO_INICIAL
-        <= int(arquivo.stem.removeprefix("pedagio_volume_"))
-        <= ANO_FINAL
-    )
+    arquivos = localizar_arquivos_pedagio()
 
     tabelas_normalizadas = []
     for arquivo in tqdm(

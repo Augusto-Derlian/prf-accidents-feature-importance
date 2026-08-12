@@ -1,4 +1,7 @@
-"""Padroniza e concatena os levantamentos de condição do pavimento do DNIT."""
+"""Padroniza e concatena os levantamentos de condição do pavimento do DNIT para formar o data/02_intermediate/01_condicao_pavimento_concat.parquet."""
+"""Baixe os arquivos DNIT listados em references/SOURCES.md para data/01_raw/dnit/condicao_pavimento/<ANO> e renomeie como condicao_pavimento_YYYY_MM.xlsx ou condicao_pavimento_YYYY.csv."""
+
+from pathlib import Path
 
 import logging
 
@@ -57,6 +60,38 @@ COLUNAS_FINAIS = [
     "data_inversa",
     "icm",
 ]
+
+
+def validar_entrada_condicao_pavimento() -> None:
+    if not DIRETORIO_ENTRADA.exists():
+        raise FileNotFoundError(
+            f"Diretório de entrada ausente: {DIRETORIO_ENTRADA}"
+        )
+
+    diretorios = [
+        DIRETORIO_ENTRADA / "2023",
+        DIRETORIO_ENTRADA / "2024",
+        DIRETORIO_ENTRADA / "2025",
+        DIRETORIO_ENTRADA / "2026",
+    ]
+    missing_dirs = [str(d) for d in diretorios if not d.exists()]
+    if missing_dirs:
+        raise FileNotFoundError(
+            "Diretórios DNIT ausentes: " + ", ".join(missing_dirs)
+        )
+
+    # Some files live inside year subfolders (e.g. 2025/condicao_pavimento_2025_11.xlsx).
+    # Search recursively for each expected filename rather than only at the root folder.
+    missing_files = []
+    for arquivo in PLANILHAS_EXCEL:
+        found = any(DIRETORIO_ENTRADA.rglob(arquivo))
+        if not found:
+            missing_files.append(str(DIRETORIO_ENTRADA / arquivo))
+
+    if missing_files:
+        raise FileNotFoundError(
+            "Arquivos obrigatórios de DNIT ausentes: " + ", ".join(missing_files)
+        )
 
 
 def normalizar_cabecalho_simples(dados: pd.DataFrame) -> pd.DataFrame:
@@ -148,6 +183,7 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     logger.info("=== Concatenação da condição do pavimento (DNIT) ===")
 
+    validar_entrada_condicao_pavimento()
     tabelas_normalizadas: dict[str, pd.DataFrame] = {}
 
     diretorio_2026 = DIRETORIO_ENTRADA / "2026"

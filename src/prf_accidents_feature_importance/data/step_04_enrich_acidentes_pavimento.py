@@ -1,4 +1,7 @@
 """Adiciona aos acidentes o ICM do trecho de pavimento correspondente."""
+"""Requer a saída de step_03 e o arquivo consolidado de pavimento gerado por step_01b. Consulte references/SOURCES.md para as origens dos dados DNIT e PRF."""
+
+from pathlib import Path
 
 import logging
 
@@ -22,6 +25,19 @@ ARQUIVO_SAIDA = (
 COLUNAS_LOCALIZACAO = ["uf", "br"]
 SENTIDOS_CONHECIDOS = ["crescente", "decrescente"]
 DISTANCIA_MAXIMA_TRECHO_KM = 10
+
+
+def validar_arquivos_entrada_acidentes_pavimento() -> None:
+    missing = []
+    if not ARQUIVO_ACIDENTES.exists():
+        missing.append(str(ARQUIVO_ACIDENTES))
+    if not ARQUIVO_PAVIMENTO.exists():
+        missing.append(str(ARQUIVO_PAVIMENTO))
+
+    if missing:
+        raise FileNotFoundError(
+            "Arquivos de entrada ausentes: " + ", ".join(missing)
+        )
 
 
 def preparar_trechos_pavimento(pavimento: pd.DataFrame) -> pd.DataFrame:
@@ -452,6 +468,7 @@ def main() -> None:
     """Executa o enriquecimento e salva o arquivo resultante."""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+    validar_arquivos_entrada_acidentes_pavimento()
     acidentes = pd.read_parquet(ARQUIVO_ACIDENTES)
     pavimento = pd.read_parquet(ARQUIVO_PAVIMENTO)
 

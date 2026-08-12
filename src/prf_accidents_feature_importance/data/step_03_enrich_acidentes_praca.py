@@ -1,4 +1,7 @@
 """Adiciona aos acidentes o volume da praça de pedágio mais próxima."""
+"""Requer a saída de step_01c e step_02, gerada em data/02_intermediate. As fontes brutas estão listadas em references/SOURCES.md."""
+
+from pathlib import Path
 
 import logging
 
@@ -16,6 +19,19 @@ ARQUIVO_SAIDA = DIRETORIO_DADOS_INTERMEDIARIOS / "03_acidentes_praca_enriched.pa
 
 COLUNAS_LOCALIZACAO = ["uf", "br", "km"]
 COLUNAS_PRACA = ["uf", "br", "km_praca_mais_proxima"]
+
+
+def validar_arquivos_entrada_acidentes_e_pedagios() -> None:
+    missing = []
+    if not ARQUIVO_ACIDENTES.exists():
+        missing.append(str(ARQUIVO_ACIDENTES))
+    if not ARQUIVO_PEDAGIOS.exists():
+        missing.append(str(ARQUIVO_PEDAGIOS))
+
+    if missing:
+        raise FileNotFoundError(
+            "Arquivos de entrada ausentes: " + ", ".join(missing)
+        )
 
 
 def criar_volume_mensal(pedagios: pd.DataFrame) -> pd.DataFrame:
@@ -142,6 +158,7 @@ def main() -> None:
     """Executa o enriquecimento e salva o arquivo resultante."""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+    validar_arquivos_entrada_acidentes_e_pedagios()
     acidentes = pd.read_parquet(ARQUIVO_ACIDENTES)
     pedagios = pd.read_parquet(ARQUIVO_PEDAGIOS)
 

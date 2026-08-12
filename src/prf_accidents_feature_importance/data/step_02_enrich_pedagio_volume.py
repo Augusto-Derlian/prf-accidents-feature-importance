@@ -1,4 +1,7 @@
 """Adiciona BR, km e UF ao volume das praças de pedágio."""
+"""Use o arquivo gerado por step_01a e o CSV de cadastro de praças em data/01_raw/antt/praca_pedagio/2026/praca_pedagio_2026_05.csv. Veja referências em references/SOURCES.md."""
+
+from pathlib import Path
 
 import logging
 
@@ -35,10 +38,24 @@ ALIAS_PRACAS = {
 }
 
 
+def validar_arquivos_entrada_pedagio() -> None:
+    missing = []
+    if not ARQUIVO_VOLUME.exists():
+        missing.append(str(ARQUIVO_VOLUME))
+    if not ARQUIVO_PRACAS.exists():
+        missing.append(str(ARQUIVO_PRACAS))
+
+    if missing:
+        raise FileNotFoundError(
+            "Arquivos de entrada ausentes: " + ", ".join(missing)
+        )
+
+
 def main() -> None:
     """Relaciona o volume ao cadastro de praças e salva o resultado."""
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
+    validar_arquivos_entrada_pedagio()
     volume = pd.read_parquet(ARQUIVO_VOLUME)
     pracas = pd.read_csv(ARQUIVO_PRACAS, sep=";", low_memory=False)
 

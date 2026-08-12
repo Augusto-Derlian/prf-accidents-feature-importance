@@ -72,10 +72,19 @@ Registre o environment no Jupyter:
 3. rode o catboost_visualizacao.ipynb para gerar as explicações SHAP
 
 ### 3. Como rodar com dados reais:
-1. Baixe os dados abertos da PRF, DNIT e ANTT.
-2. Execute o pipeline de ETL para processar os dados.
-3. Rode o notebook de treinamento do CatBoost.
-4. Execute o notebook de visualização e explicabilidade do SHAP.
+1. Consulte os comentários no topo dos arquivos em `src/prf_accidents_feature_importance/data/step_*.py` para saber onde baixar, onde salvar e como renomear cada arquivo.
+2. Coloque os dados brutos em `data/01_raw/` usando as pastas esperadas:
+   - `antt/pedagio_volume/`
+   - `antt/praca_pedagio/2026/`
+   - `dnit/condicao_pavimento/`
+   - `prf/acidentes_ocorrencia/`
+3. Execute o pipeline de ETL:
+   - `prepare-data`
+4. Construa as features:
+   - `build-features`
+5. Treine o modelo:
+   - `train-model`
+6. Execute os notebooks de visualização, se precisar de explicações SHAP.
 
 ### Treinamento reproduzível do CatBoost
 

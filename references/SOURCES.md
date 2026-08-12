@@ -4,7 +4,7 @@ Catalog of links used to obtain the raw files in `data/raw/`. When a new
 partition is added, record the original URL here before generating derived
 layers.
 
-## PRF
+## PRF - Polícia Rodoviária Federal
 
 General source: open data from the Brazilian Federal Highway Police.
 
@@ -47,7 +47,7 @@ General source: open data from the Brazilian Federal Highway Police.
 - [2019](https://drive.google.com/uc?export=download&id=1DAJYKVfkTcPhQodSmHp9rsG1Q8XJW-m3)
 - [2018](https://drive.google.com/uc?export=download&id=1J-012nSnIafOASNFvIYY_vDKKpM51w5_)
 
-## ANTT
+## ANTT - Agência Nacional de Transportes Terrestres
 
 ### pedagio_volume
 
@@ -75,7 +75,7 @@ General source: open data from the Brazilian Federal Highway Police.
 
 - [May](https://dados.antt.gov.br/dataset/a7e1e12d-f8e8-40cd-bc1f-57973a4a4a6d/resource/c3b30e68-8497-4985-af51-931047d1c69a/download/dados-dos-pracas-de-pedagio5_2026.csv)
 
-## DNIT
+## DNIT - Departamento Nacional de Infraestrutura de Transportes
 
 ### condicao_pavimento
 
@@ -85,17 +85,18 @@ General source: open data from the Brazilian Federal Highway Police.
 
 - [June](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/8805b029-2685-4a0f-8452-bfbc0ac65a0e/download/levantamentos_pavimentada_2026_06.csv)
 - [May](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/9b12ea3d-bbb5-49d5-aa43-db5945e86d90/download/levantamentos_pavimentada_2026_05.csv)
+- April (não usado)
 - [March](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/6f8c9349-a73b-434f-a7e5-59470a1ab8cc/download/levantamentos_pavimentada_2026_03-1.csv)
 - [February](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/7c5cbdc4-c2ac-4f36-9d3e-ad77c5af446f/download/levantamentos_pavimentada_2026_02.csv)
 - [January](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/a212a85a-bc92-4475-8e81-f80af58e688a/download/levantamentos_pavimentada_2026_01.csv)
 
 #### 2025
 
-- [December](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/398043cc-b5a3-4994-9dad-b83086a0fd23/download/levantamentos_pavimentada_2025_12.csv)
+- [December](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/398043cc-b5a3-4994-9dad-b83086a0fd23/download/levantamentos_pavimentada_2025_12.csv) (não usado)
 - [November](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/acac4615-ba04-486e-b33d-47b3b6b17976/download/levantamentos_2025_11.xlsx)
-- [October](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/dd1e1a2e-8c40-490d-99dd-920709b36727/download/levantamentos_pavimentada_2025_10.csv)
+- [October](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/dd1e1a2e-8c40-490d-99dd-920709b36727/download/levantamentos_pavimentada_2025_10.csv) (não usado)
 - [September](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/e6e091b1-0fc8-4f98-b9c6-568071e18d58/download/levantamentos_pavimentada_2025_09.csv)
-- [August](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/9ef52ffb-b64e-48a9-bd63-941706f74da2/download/levantamentos_pavimentada_2025_08.csv)
+- [August](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/9ef52ffb-b64e-48a9-bd63-941706f74da2/download/levantamentos_pavimentada_2025_08.csv) (não usado)
 - [July](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/7b3eaf77-f0aa-4161-b2ea-4697d65c3df6/download/levantamentos_2025-07_pav.xlsx)
 - [June](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/075a7507-c713-4e10-ae03-311bff9b327f/download/levantamentos_2025-06_pav.xlsx)
 - [May](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/427ca028-8eda-4acc-936e-519932916043/download/levantamentos_2025-05_pav.xlsx)
@@ -123,16 +124,16 @@ General source: open data from the Brazilian Federal Highway Police.
 
 - [December](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/65c961ba-252c-4600-917e-2f09a719567f/download/icm-dados-aberto-12_2023.xlsx)
 - [November](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/c35e3d72-1660-4fcb-9752-0044e417d40e/download/icm-dados-aberto-11_2023.xlsx)
-- [October](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/beae9362-6f14-49c2-a4d0-92ae7b5c22b6/download/icm-10_2023-transparencia.csv)
-- [September](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/d2875a50-1d28-4c2f-890a-2a8f530eb1dd/download/icm-09_2023-dados_abertos.csv)
-- [August](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/7237e56a-c6ea-4d59-a4b4-207b808e396e/download/icm-08_2023-dados-abertos.csv)
-- [July](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/853da07f-8d23-4958-ab69-1fcccc02b14e/download/icm_07_2023-dados-abertos.csv)
-- [June](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/02610800-abf3-4dc1-a4c0-78b9a41ae9c9/download/icm_06_2023-transparencia.csv)
-- [May](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/0b650714-e1ee-4125-a696-ec364e1e63f4/download/icm-05_2023_transparencia.csv)
-- [April](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/611c4790-7588-4d6a-b5c0-3c15305176eb/download/icm-04_2023-transparencia.csv)
-- [March](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/d60a02d8-6b5a-4b8b-8223-d0a82062e8a3/download/icm-03_2023-transparencia.csv)
-- [February](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/76c82969-afa8-4b41-8afa-1e83e232d571/download/icm-fev-2023.csv)
-- [January](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/d3eeb415-4b19-4d02-a123-ce10fa16a0c7/download/icm_-01-2023-transparencia.csv)
+- [October](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/beae9362-6f14-49c2-a4d0-92ae7b5c22b6/download/icm-10_2023-transparencia.csv) (não usado)
+- [September](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/d2875a50-1d28-4c2f-890a-2a8f530eb1dd/download/icm-09_2023-dados_abertos.csv) (não usado)
+- [August](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/7237e56a-c6ea-4d59-a4b4-207b808e396e/download/icm-08_2023-dados-abertos.csv) (não usado)
+- [July](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/853da07f-8d23-4958-ab69-1fcccc02b14e/download/icm_07_2023-dados-abertos.csv) (não usado)
+- [June](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/02610800-abf3-4dc1-a4c0-78b9a41ae9c9/download/icm_06_2023-transparencia.csv) (não usado)
+- [May](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/0b650714-e1ee-4125-a696-ec364e1e63f4/download/icm-05_2023_transparencia.csv) (não usado)
+- [April](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/611c4790-7588-4d6a-b5c0-3c15305176eb/download/icm-04_2023-transparencia.csv) (não usado)
+- [March](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/d60a02d8-6b5a-4b8b-8223-d0a82062e8a3/download/icm-03_2023-transparencia.csv) (não usado)
+- [February](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/76c82969-afa8-4b41-8afa-1e83e232d571/download/icm-fev-2023.csv) (não usado)
+- [January](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/d3eeb415-4b19-4d02-a123-ce10fa16a0c7/download/icm_-01-2023-transparencia.csv) (não usado)
 
 #### 2022
 
@@ -163,7 +164,7 @@ General source: open data from the Brazilian Federal Highway Police.
 - [February](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/a8d22a62-0013-4952-ac79-938a9a02a005/download/icm_fev_2021.csv)
 - [January](https://servicos.dnit.gov.br/dadosabertos/dataset/b41e3382-79f5-4b1d-b936-dc75aaa82dfa/resource/151829dd-3af6-4d03-9cbb-d05af8e4bc31/download/icm_01_2021.xlsx)
 
-## IBGE
+## IBGE - Instituto Brasileiro de Geografia e Estatística
 
 ### malha_estados
 
