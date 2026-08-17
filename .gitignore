@@ -78,6 +78,7 @@ models/
 *.temp
 tmp/
 temp/
+backup/
 
 src/prf_accidents_feature_importance/modeling/catboost/model/catboost_model.cbm
 src/prf_accidents_feature_importance/modeling/catboost/model/model_summary.json

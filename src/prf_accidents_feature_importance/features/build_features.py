@@ -18,10 +18,13 @@ ARQUIVO_ENTRADA = (
 ARQUIVO_SAIDA = DIRETORIO_DADOS_PROCESSADOS / "acidentes_features.parquet"
 
 COLUNA_ALVO = "classificacao_acidente"
+TAMANHO_TRECHO_KM = 10
 
 COLUNAS_CATEGORICAS = [
     "dia_semana",
     "br",
+    "causa_acidente",
+    "tipo_acidente",
     "fase_dia",
     "condicao_meteorologica",
     "tipo_pista",
@@ -56,7 +59,6 @@ COLUNAS_PARA_REMOVER = [
     "uop",
     "uso_solo",
     # Vazamento do alvo
-    "tipo_acidente",
     "pessoas",
     "mortos",
     "feridos_leves",
@@ -121,11 +123,33 @@ def remover_colunas_nao_preditivas(acidentes: pd.DataFrame) -> pd.DataFrame:
     return acidentes.drop(columns=COLUNAS_PARA_REMOVER)
 
 
+def criar_trecho_br(acidentes: pd.DataFrame) -> pd.DataFrame:
+    """Junta a BR, o estado e o trecho de 10 km em uma categoria."""
+    resultado = acidentes.copy()
+    inicio_trecho = ((resultado["km"] // TAMANHO_TRECHO_KM) * TAMANHO_TRECHO_KM).astype(
+        "Int64"
+    )
+    fim_trecho = inicio_trecho + TAMANHO_TRECHO_KM
+
+    resultado["br"] = (
+        "BR-"
+        + resultado["br"].astype("string")
+        + " / "
+        + resultado["uf"].astype("string")
+        + " (km "
+        + inicio_trecho.astype("string")
+        + " a "
+        + fim_trecho.astype("string")
+        + ")"
+    )
+    return resultado
+
+
 def criar_fator_humano(acidentes: pd.DataFrame) -> pd.DataFrame:
     """Indica se a causa registrada está associada a um fator humano."""
     resultado = acidentes.copy()
     resultado["fator_humano"] = (
-        resultado.pop("causa_acidente").isin(CAUSAS_DE_FATOR_HUMANO).astype("int8")
+        resultado["causa_acidente"].isin(CAUSAS_DE_FATOR_HUMANO).astype("int8")
     )
     return resultado
 
@@ -165,12 +189,12 @@ def separar_tracado_via(acidentes: pd.DataFrame) -> pd.DataFrame:
 
 def construir_features(acidentes: pd.DataFrame) -> pd.DataFrame:
     """Aplica todas as transformações de engenharia de features."""
-    resultado = remover_colunas_nao_preditivas(acidentes)
+    resultado = criar_trecho_br(acidentes)
+    resultado = remover_colunas_nao_preditivas(resultado)
     resultado = criar_fator_humano(resultado)
     # resultado = codificar_dia_semana(resultado)
     resultado = separar_tracado_via(resultado)
     resultado = resultado.dropna(subset=[COLUNA_ALVO]).reset_index(drop=True)
-    resultado["br"] = resultado["br"].astype("string")
 
     return resultado[COLUNAS_SAIDA]
 
