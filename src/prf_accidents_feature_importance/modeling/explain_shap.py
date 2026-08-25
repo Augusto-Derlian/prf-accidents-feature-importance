@@ -1,5 +1,7 @@
 """Gera explicações SHAP reproduzíveis para o modelo CatBoost treinado."""
-
+# Para executar: Da raiz do projeto, rode:
+# python -m prf_accidents_feature_importance.modeling.explain_shap
+# Os resultados serão criados em data/models/catboost/shap/
 import argparse
 from pathlib import Path
 
@@ -74,7 +76,7 @@ def calcular_shap(
             f"Formato SHAP inesperado para multiclass: {shap_values.shape}"
         )
 
-    valores = shap_values[:, :, :-1]
+    valores = shap_values[:, :, :-1].transpose(0, 2, 1)
     classes = modelo.classes_
 
     # Importância global média absoluta, agregada por classe.
