@@ -217,7 +217,7 @@ def treinar_modelo(
     pd.DataFrame(
         {
             "feature": melhor_modelo.feature_names_,
-            "importance": melhor_modelo.get_feature_importance(),
+            "importance": melhor_modelo.get_feature_importance(), # importâncias nativas do CatBoost, não valores SHAP
         }
     ).sort_values("importance", ascending=False).to_csv(
         diretorio_saida / "feature_importance.csv",

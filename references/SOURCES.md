@@ -69,7 +69,7 @@ General source: open data from the Brazilian Federal Highway Police.
 
 ### praca_pedagio
 
-- [Data dictionary](https://dados.antt.gov.br/dataset/a7e1e12d-f8e8-40cd-bc1f-57973a4a4a6d/resource/3c8dafe9-e63f-42d9-8b39-7ce02b7e7c5e/download/praca_pedagio_dicionario_dados.pdf)
+- [Data dictionary](https://drive.google.com/file/d/1TmI9ZDXI9LeQzpVPjGqReAkJP7sKAvSX/view?usp=sharing)
 
 #### 2026
 
