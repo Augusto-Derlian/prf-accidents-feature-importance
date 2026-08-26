@@ -6,6 +6,7 @@ import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import shap
 from catboost import CatBoostClassifier, Pool
@@ -116,7 +117,7 @@ def calcular_shap(
 
     # Summary plot global agregado por classe.
     shap.summary_plot(
-        valores.mean(axis=2),
+        np.abs(valores).mean(axis=2),
         x_teste,
         show=False,
     )
