@@ -4,6 +4,7 @@ import json
 import logging
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pandas as pd
 from catboost import CatBoostClassifier
 from sklearn.metrics import (
@@ -214,21 +215,66 @@ def treinar_modelo(
 
     diretorio_saida.mkdir(parents=True, exist_ok=True)
     melhor_modelo.save_model(diretorio_saida / "modelo.cbm")
-    pd.DataFrame(
+    importancias = pd.DataFrame(
         {
             "feature": melhor_modelo.feature_names_,
             "importance": melhor_modelo.get_feature_importance(), # importâncias nativas do CatBoost, não valores SHAP
         }
-    ).sort_values("importance", ascending=False).to_csv(
+    ).sort_values("importance", ascending=False)
+    importancias.to_csv(
         diretorio_saida / "feature_importance.csv",
         index=False,
     )
+    figura, eixo = plt.subplots(
+        figsize=(10, max(5, len(importancias) * 0.45)),
+    )
+    grafico = importancias.sort_values("importance")
+    eixo.barh(grafico["feature"], grafico["importance"], color="#2f6690")
+    eixo.set(
+        xlabel="Importância",
+        ylabel="Feature",
+        title="Importância das features",
+    )
+    eixo.grid(axis="x", alpha=0.25)
+    figura.tight_layout()
+    figura.savefig(diretorio_saida / "feature_importance.png", dpi=150)
+    plt.close(figura)
     pd.DataFrame(resultados).sort_values(
         "f1_macro_validacao",
         ascending=False,
     ).to_csv(diretorio_saida / "tuning_results.csv", index=False)
     with (diretorio_saida / "metrics.json").open("w", encoding="utf-8") as arquivo:
         json.dump(metricas, arquivo, ensure_ascii=False, indent=2)
+
+    figura, eixo = plt.subplots(figsize=(8, 6))
+    matriz = metricas["confusion_matrix"]
+    imagem = eixo.imshow(matriz, cmap="Blues")
+    figura.colorbar(imagem, ax=eixo)
+    eixo.set(
+        xticks=range(len(metricas["classes"])),
+        yticks=range(len(metricas["classes"])),
+        xticklabels=metricas["classes"],
+        yticklabels=metricas["classes"],
+        xlabel="Classe predita",
+        ylabel="Classe real",
+        title="Matriz de confusão",
+    )
+    plt.setp(eixo.get_xticklabels(), rotation=30, ha="right")
+    limite = max(max(linha) for linha in matriz)
+    for linha in range(len(matriz)):
+        for coluna in range(len(matriz[linha])):
+            valor = matriz[linha][coluna]
+            eixo.text(
+                coluna,
+                linha,
+                valor,
+                ha="center",
+                va="center",
+                color="white" if valor > limite / 2 else "black",
+            )
+    figura.tight_layout()
+    figura.savefig(diretorio_saida / "confusion_matrix.png", dpi=150)
+    plt.close(figura)
 
     logger.info("Modelo salvo em: %s", diretorio_saida / "modelo.cbm")
     logger.info("F1 macro no teste: %.4f", metricas["f1_macro"])
