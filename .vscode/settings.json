@@ -1,7 +1,21 @@
 {
-    "jupyter.notebookFileRoot": "${workspaceFolder}",
-    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
-    "python.analysis.extraPaths": [
-        "${workspaceFolder}/src"
-    ]
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "C:/Users/augus/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex.exe",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-c-style-errors",
+        "-pdf",
+        "%DOC%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex",
+      "tools": ["pdflatex"]
+    }
+  ]
 }
