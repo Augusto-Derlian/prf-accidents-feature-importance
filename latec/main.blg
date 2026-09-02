@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+Reallocating 'name_of_file' (item size: 1) to 4 items.
+The style file: sbc.bst
+Reallocating 'name_of_file' (item size: 1) to 13 items.
+Database file #1: sbc-template.bib
+Warning--empty year in sklearn_metrics
+You've used 22 entries,
+            1935 wiz_defined-function locations,
+            610 strings with 7590 characters,
+and the built_in function-call counts, 8054 in all, are:
+= -- 798
+> -- 301
+< -- 22
++ -- 108
+- -- 96
+* -- 642
+:= -- 1425
+add.period$ -- 73
+call.type$ -- 22
+change.case$ -- 151
+chr.to.int$ -- 22
+cite$ -- 23
+duplicate$ -- 319
+empty$ -- 561
+format.name$ -- 131
+if$ -- 1572
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 23
+newline$ -- 118
+num.names$ -- 68
+pop$ -- 122
+preamble$ -- 1
+purify$ -- 154
+quote$ -- 0
+skip$ -- 251
+stack$ -- 0
+substring$ -- 519
+swap$ -- 41
+text.length$ -- 5
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 122
+warning$ -- 1
+while$ -- 66
+width$ -- 0
+write$ -- 296
+(There was 1 warning)
