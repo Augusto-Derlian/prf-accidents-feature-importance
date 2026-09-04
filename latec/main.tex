@@ -9,7 +9,7 @@
      
 \sloppy
 
-\title{Classificação de Acidentes Rodoviários a Partir de Fatores de Tráfego e Pavimento}
+\title{Classificação de Acidentes Rodoviários a Partir de Fatores de Tráfego e Pavimento no Brasil}
 
 \author{Augusto D. N. Oliveira\inst{1}, Vitor Uchikawa\inst{2}}
 
@@ -20,14 +20,16 @@
     \email{augusto-\_-14@hotmail.com, vitor.uchikawa@gmail.com}
 }
 
-\begin{document} 
+\begin{document}
 
 \maketitle
 
 \begin{abstract}
+This study analyzes the relationship between road accident characteristics and severity classification in Brazil. Data from the Federal Highway Police, DNIT, and ANTT were integrated, resulting in 187,348 accident records and 13 predictor variables. A multiclass CatBoost classifier was trained with stratified data splitting, class weights, and SHAP-based interpretation. On the test set, the model achieved 77.78\% accuracy, 55.50\% balanced accuracy, and 57.21\% macro F1-score. Accident type, highway, and accident cause were the most important features according to the model. Statistical association measures and predictive importance were analyzed jointly, emphasizing that these results describe associations and predictive contributions rather than causal effects.
 \end{abstract}
      
 \begin{resumo} 
+Este estudo analisa a relação entre as características dos acidentes rodoviários e sua classificação de severidade no Brasil. Foram integrados dados da Polícia Rodoviária Federal, do DNIT e da ANTT, resultando em 187.348 registros de acidentes e 13 variáveis preditoras. Foi treinado um classificador CatBoost multiclasse, com divisão estratificada dos dados, pesos de classe e interpretação por meio de SHAP. No conjunto de teste, o modelo alcançou 77,78\% de acurácia, 55,50\% de acurácia balanceada e 57,21\% de F1-score macro. Tipo de acidente, rodovia e causa do acidente foram as características de maior importância segundo o modelo. Medidas de associação estatística e importância preditiva foram analisadas conjuntamente, ressaltando que os resultados descrevem associações e contribuições preditivas, e não efeitos causais.
 \end{resumo}
 
 \section{Introdução}
@@ -40,7 +42,7 @@ Nesse sentido, os dados abertos da Polícia Rodoviária Federal (PRF) apresentam
 
 Embora reúna informações detalhadas sobre os acidentes, a base da PRF não contempla todos os fatores pertinentes à predição da classificação, como aspectos relacionados ao tráfego e à conservação das rodovias. Por esse motivo, ela foi complementada com o volume de veículos nas praças de pedágio, fornecido pela Agência Nacional de Transportes Terrestres (ANTT) \cite{antt_dados_abertos}, e com o Índice de Condição da Manutenção (ICM), disponibilizado pelo Departamento Nacional de Infraestrutura de Transportes (DNIT) \cite{dnit_icm}.
 
-A partir dessa integração, foram considerados os registros de acidentes disponíveis posteriores a 1º de novembro de 2023. Cada ocorrência foi associada, quando disponíveis, ao volume mensal da praça de pedágio mais próxima e ao ICM do trecho correspondente.
+A partir dessa integração, foram considerados os registros de acidentes disponíveis a partir de 1º de novembro de 2023. Cada ocorrência foi associada, quando disponíveis, ao volume mensal da praça de pedágio mais próxima e ao ICM do trecho correspondente.
 
 Após o pré-processamento, o conjunto de dados foi consolidado em 187.348 registros de acidentes com 13 variáveis preditoras. Nesse conjunto, a classificação do acidente foi definida como variável-alvo e dividida em três classes: com vítimas fatais, com vítimas feridas e sem vítimas.
 
@@ -60,38 +62,13 @@ Mesmo após a exclusão dessas variáveis, as relações observadas nos dados de
 
 Considerando essas limitações, o problema de pesquisa consiste em avaliar em que medida as características dos acidentes e das rodovias permitem distinguir as três classes analisadas. Também se busca identificar quais variáveis apresentam maior associação com a classificação e maior contribuição para o desempenho do modelo.
 
-\subsection{Objetivo geral}
+\subsection{Objetivo Geral}
 
 Diante disso, o objetivo geral deste trabalho é analisar as relações entre as características dos acidentes rodoviários e sua classificação. Pretende-se ainda desenvolver e avaliar um modelo de aprendizado de máquina para classificar as ocorrências registradas pela PRF e identificar as variáveis de maior relevância preditiva.
 
 \subsection{Objetivos específicos}
 
-\begin{itemize}
-\item integrar e padronizar os dados de acidentes da PRF, de volume de pedágio da ANTT e de condição do pavimento do DNIT;
-
-\item associar aos registros de acidentes o volume mensal da praça de pedágio mais próxima e o ICM do trecho correspondente;
-
-\item examinar a estrutura, a qualidade, os valores ausentes e a consistência dos dados;
-
-\item caracterizar a distribuição das classes e a distribuição espacial dos acidentes;
-
-\item selecionar e construir as variáveis preditoras, excluindo as informações que causam vazamento do alvo;
-
-\item medir a associação entre as variáveis categóricas e a classificação dos acidentes por meio do V de Cramér;
-
-\item estimar a incerteza das proporções de acidentes fatais por meio do intervalo de Wilson;
-
-\item comparar as variáveis numéricas entre as classes com o teste de Kruskal--Wallis e o tamanho de efeito epsilon ao quadrado;
-
-\item examinar as relações entre as variáveis numéricas por meio da correlação de Spearman;
-
-\item treinar e ajustar um classificador CatBoost, considerando o desbalanceamento entre as classes;
-
-\item avaliar o modelo por meio da acurácia, acurácia balanceada, F1 macro, F1 ponderado, métricas por classe e matriz de confusão; e
-
-\item identificar as variáveis mais importantes para a classificação produzida pelo modelo.
-
-\end{itemize}
+Os objetivos específicos são: (i) integrar e padronizar os dados da PRF, da ANTT e do DNIT; (ii) associar cada acidente ao volume mensal da praça de pedágio mais próxima e ao ICM do trecho; (iii) examinar a qualidade, a distribuição e os valores ausentes dos dados; (iv) selecionar e construir variáveis preditoras, evitando vazamento do alvo; (v) medir associações por V de Cramér, intervalo de Wilson, Kruskal--Wallis, epsilon ao quadrado e correlação de Spearman; (vi) treinar e ajustar um classificador CatBoost considerando o desbalanceamento; e (vii) avaliar o modelo e identificar as variáveis mais importantes.
 
 \section{Fundamentação teórica}
 
@@ -112,6 +89,8 @@ Essas representações gráficas geralmente são complementadas por estatística
 A análise estatística permite examinar as relações e suas intensidades entre variáveis. A escolha do método estatístico depende do tipo de variável considerada e do objetivo da análise.
 
 Neste trabalho, o $V$ de Cramér é utilizado para avaliar associações entre variáveis categóricas; o teste de Kruskal--Wallis e o $\epsilon^2$ são empregados na comparação de variáveis numéricas entre grupos; o intervalo de Wilson é utilizado na estimação de proporções; e a correlação de Spearman é aplicada à análise de associações monotônicas entre variáveis numéricas. Esses métodos são apresentados nas subseções a seguir.
+
+Na análise realizada, esses métodos foram aplicados para avaliar associações entre os fatores selecionados e a severidade dos acidentes. Os resultados são posteriormente comparados à importância das variáveis no modelo de classificação, permitindo discutir de forma complementar as associações estatísticas e as contribuições preditivas \cite{agresti2007,kruskal1952,brown2001interval,spearman1904}.
 
 \subsubsection{$V$ de Cramér}
 
@@ -190,7 +169,7 @@ F_t(x) = F_{t-1}(x) + \alpha h_t(x),
 \end{equation}
 em que $F_t(x)$ é o modelo após a iteração $t$, $F_{t-1}(x)$ representa o modelo anterior, $h_t(x)$ é o novo preditor-base e $\alpha$ corresponde à taxa de aprendizado que controla a contribuição desse preditor.
 
-O CatBoost (Categorical Boosting), é uma implementação do gradient boosting desenvolvida para lidar com variáveis categóricas. Uma abordagem convencional consiste em transformar cada categoria em variáveis binárias por meio de one-hot encoding, o que pode gerar um número elevado de variáveis quando existem categorias com alta cardinalidade. Outra possibilidade é substituir as categorias por estatísticas calculadas a partir da variável resposta. Entretanto, quando o valor da própria observação participa desse cálculo, ocorre vazamento da informação do alvo, o que pode produzir diferenças entre o comportamento do modelo nos dados de treinamento e em novas observações \cite{prokhorenkova2018catboost}.
+O CatBoost (Categorical Boosting) é uma implementação do gradient boosting desenvolvida para lidar com variáveis categóricas. Uma abordagem convencional consiste em transformar cada categoria em variáveis binárias por meio de one-hot encoding, o que pode gerar um número elevado de variáveis quando existem categorias com alta cardinalidade. Outra possibilidade é substituir as categorias por estatísticas calculadas a partir da variável resposta. Entretanto, quando o valor da própria observação participa desse cálculo, ocorre vazamento da informação do alvo, o que pode produzir diferenças entre o comportamento do modelo nos dados de treinamento e em novas observações \cite{prokhorenkova2018catboost}.
 
 Para lidar com esse problema, o CatBoost utiliza estatísticas ordenadas para representar as variáveis categóricas. Durante o treinamento, os dados são organizados em diferentes ordens aleatórias e, para cada observação, a estatística de sua categoria é calculada apenas com base nas observações anteriores. O mesmo princípio é aplicado no ordered boosting: ao calcular o gradiente de uma observação, o algoritmo utiliza um modelo treinado somente com os dados que aparecem antes dela, sem incluir informações sobre sua classe. Essa estratégia ajuda a reduzir o vazamento da variável resposta e as diferenças entre as predições realizadas nos dados de treinamento e teste. O CatBoost também utiliza árvores de decisão simétricas, nas quais o mesmo critério de divisão é aplicado a todos os nós de um mesmo nível, formando estruturas balanceadas e eficientes \cite{prokhorenkova2018catboost}.
 
@@ -206,138 +185,167 @@ Em problemas multiclasse, essas métricas podem ser calculadas individualmente p
 
 Por fim, a matriz de confusão complementa essas métricas ao apresentar, em forma de tabela, a relação entre as classes reais e as previstas pelo modelo. Os valores da diagonal representam as classificações corretas, enquanto os demais indicam os erros de classificação. Dessa forma, sua análise também permite identificar quais classes são mais frequentemente confundidas entre si \cite{james2023islp}.
 
+\subsection{Fatores Associados aos Acidentes Rodoviários}
+A severidade dos acidentes rodoviários é um fenômeno multifatorial, associado à interação entre comportamento humano, características da via, condições ambientais e tráfego. Estudos realizados no Brasil destacam a relação entre segurança viária e características de pavimento, geometria, sinalização e condições da via \cite{carmo2019,costa2022}. Neste estudo, esses fatores são representados por causas e tipo de acidente, condições meteorológicas, geometria e tipo de pista, rodovia, quilômetro, condição do pavimento e volume de tráfego. A variável \textit{fator\_humano} explicita a dimensão comportamental a partir das causas registradas.
 
-\section{Metodologia}
+A severidade é classificada em três categorias: acidentes sem vítimas, com vítimas feridas e com vítimas fatais. A condição da rodovia também pode estar relacionada a aspectos operacionais, como consumo de combustível, tempo de viagem e custos de manutenção, além de impactos ambientais \cite{bartholomeu2008}. Neste trabalho, essas características são tratadas como fatores associados e utilizadas para investigar padrões preditivos, sem interpretação causal.
 
-A metodologia adotada neste trabalho seguiu as etapas de pré-processamento dos dados, análise exploratória e treinamento de um modelo de classificação. Inicialmente, os dados obtidos das diferentes bases foram agregados e submetidos aos tratamentos necessários para a realização da análise exploratória, com o objetivo de compreender o comportamento das variáveis. Após essa análise, o conjunto de dados consolidado foi utilizado no treinamento de um modelo preditivo destinado à classificação a gravidade das ocorrências.
+\subsection{Trabalhos Relacionados}
+Estudos sobre severidade de acidentes combinam métodos estatísticos e aprendizado de máquina para identificar fatores associados e melhorar a capacidade de classificação.
 
-\subsection{Processamento dos dados}
+Carmo e Raia Junior \cite{carmo2019} analisaram rodovias federais em áreas urbanas da região Sul do Brasil, integrando registros da PRF a informações de pavimento, geometria e sinalização. Costa Júnior e Santos Júnior \cite{costa2022} utilizaram dados da PRF de 2017 a 2019 e regressão logística para investigar o risco de morte em rodovias federais brasileiras. Esses trabalhos evidenciam a relevância de características da infraestrutura, localização e condições de operação para a análise da segurança viária.
 
-O pipeline desenvolvido para o processamento inicial dos dados compreendeu as etapas de padronização, concatenação e integração das diferentes fontes abertas utilizadas no trabalho. Foram considerados os registros de acidentes da Polícia Rodoviária Federal (PRF), os dados de volume de tráfego em praças de pedágio da Agência Nacional de Transportes Terrestres (ANTT) e os levantamentos sobre a condição do pavimento disponibilizados pelo Departamento Nacional de Infraestrutura de Transportes (DNIT). Os arquivos intermediários gerados durante o processamento foram armazenados no formato Parquet, com o objetivo de reduzir os custos de leitura e armazenamento em comparação com os formatos textuais em que os dados foram originalmente disponibilizados.
+No campo do aprendizado de máquina, Samerei, Aghabayk e Montella \cite{samerei2024} compararam métodos de ensemble para classificação de severidade e obtiveram o melhor desempenho com CatBoost, utilizando SHAP para interpretação. Xie et al. \cite{xie2025} também combinaram CatBoost e SHAP em um framework interpretável para previsão de acidentes fatais. Esses trabalhos fornecem suporte metodológico para a utilização conjunta de CatBoost e técnicas de explicabilidade.
 
-Inicialmente, os arquivos anuais de volume de pedágio da ANTT foram reunidos em uma única base de dados. Nessa etapa, os nomes das colunas foram uniformizados, os campos textuais tiveram sua representação normalizada e os campos numéricos e temporais foram convertidos para tipos consistentes. De forma semelhante, os arquivos de condição do pavimento do DNIT, disponibilizados nos formatos CSV e XLSX e com diferentes estruturas de cabeçalho, foram convertidos para uma estrutura comum, contendo unidade federativa, rodovia, sentido da via, limites inicial e final do trecho, data da avaliação e Índice de Condição da Manutenção (ICM).
+Este estudo diferencia-se por integrar dados da PRF, DNIT e ANTT e combinar classificação multiclasse, análise estatística e explicabilidade, com foco em fatores de tráfego, pavimento, infraestrutura e comportamento humano no contexto brasileiro.
 
-Durante a concatenação dos arquivos anuais da PRF, foram selecionadas as variáveis pertinentes ao trabalho, padronizados os campos textuais e convertidas as informações de data, horário e valores numéricos. Após essa etapa, foram filtrados os acidentes ocorridos após 1º de novembro de 2023, período em que as informações necessárias passaram a estar disponíveis nas três bases de dados utilizadas no trabalho.
+\section{Materiais e Métodos}
+\subsection{Pré-processamento}
+As bases de dados brutas da PRF, DNIT e ANTT passaram por pré-processamento, incluindo padronização de formatos, correção de inconsistências e remoção de registros duplicados ou incompletos. As variáveis categóricas foram mantidas como categóricas e as numéricas em formato numérico. A variável km foi mantida no conjunto final e utilizada tanto na integração espacial quanto como característica preditiva. Por sua natureza espacial, sua contribuição deve ser interpretada com cautela, pois pode capturar padrões associados à localização dos acidentes. As variáveis volume\_pedagio e icm, que apresentam valores ausentes, foram preservadas no conjunto de dados, com seu tratamento realizado no pipeline de modelagem.
 
-Após a união dos arquivos originalmente separados por período, os dados de volume de pedágio foram enriquecidos com informações sobre a localização das praças. Para isso, os registros de volume foram relacionados ao cadastro de praças de pedágio da ANTT com base na concessionária e no nome da praça. Quando não foi possível obter uma correspondência pela combinação entre concessionária e praça, adotaram-se como critério alternativo as praças com localização única.
+\subsection{Integração das Bases}
+A integração das informações provenientes da PRF, DNIT e ANTT foi realizada utilizando o método de Localização de Referência Linear. A associação foi feita utilizando a Unidade Federativa (UF), a rodovia (BR), o quilômetro (KM) e o sentido de tráfego como chaves de referência. Essa abordagem possibilitou a vinculação de cada ocorrência de acidente a características do trecho rodoviário onde ocorreu, incluindo dados de pavimento e tráfego, criando um dataset unificado.
 
-Em seguida, os acidentes foram relacionados aos dados de volume de tráfego. Para cada local de acidente, identificou-se a praça de pedágio mais próxima pertencente à mesma unidade federativa e à mesma rodovia, utilizando a diferença absoluta entre os quilômetros como medida de proximidade. O volume total registrado em cada praça foi agregado mensalmente e, para cada acidente, utilizou-se o volume correspondente ao mês disponível mais próximo de sua ocorrência. O valor resultante foi incorporado à base por meio da variável \texttt{volume\_pedagio}.
+\subsection{Engenharia de Características (Feature Engineering)}
+Com base nos dados integrados, foram criadas características para alimentar o modelo. As variáveis categóricas foram dia\_semana, br, causa\_acidente, tipo\_acidente, fase\_dia, condicao\_meteorologica, tipo\_pista, inclinacao e reta. As variáveis numéricas foram km, volume\_pedagio, icm e fator\_humano.
 
-Na etapa seguinte, os acidentes foram associados ao ICM dos levantamentos de pavimento do DNIT. Os registros foram organizados por unidade federativa, rodovia, sentido e intervalo de quilômetros. Quando havia mais de uma medição para o mesmo trecho e data, utilizou-se a média do ICM. A associação priorizou os trechos que continham o quilômetro do acidente e, entre as avaliações compatíveis, aquela temporalmente mais próxima da data da ocorrência. Quando não houve correspondência direta, foi utilizado o trecho mais próximo, desde que localizado a uma distância de até 10 km.
+O fator\_humano foi construído como variável binária, derivada de causas classificadas como comportamentais ou falhas humanas. Embora exista sobreposição conceitual com causa\_acidente, ambas foram mantidas por desempenharem papéis analíticos distintos: causa\_acidente preserva a informação categórica detalhada, enquanto fator\_humano explicita uma dimensão binária de interesse e favorece a interpretação por SHAP. Variáveis irrelevantes ou que poderiam causar vazamento do alvo foram removidas.
 
-Após integrar as três fontes em uma única base, foi realizado o pré-processamento das variáveis utilizadas nas etapas seguintes: a localização dos acidentes foi representada por uma variável categórica que combina a BR, a unidade federativa e segmentos de 10 km; a variável \texttt{fator\_humano} foi criada para indicar se a causa do acidente está associada a fatores humanos; e a variável \texttt{tracado\_via} foi dividida em \texttt{inclinacao}, que representa aclive, declive ou trecho nivelado, e \texttt{reta}, que diferencia trechos retos e curvos.
+\subsection{Modelagem e Treinamento do CatBoost}
+\subsubsection{Divisão dos Dados}
+O conjunto final, com 187.348 registros, foi dividido de forma estratificada em 80\% para treinamento, 10\% para validação e 10\% para teste, utilizando seed fixa em 42 para garantir a reprodutibilidade dos experimentos.
 
-Com o objetivo de reduzir a dimensionalidade dos dados e evitar o vazamento de informações relacionadas à variável-alvo, foram removidas as variáveis utilizadas apenas como identificadores, as informações de localização direta e os campos diretamente associados às consequências do acidente. Nesse último grupo, incluem-se as quantidades de mortos, feridos, ilesos e outras informações utilizadas na caracterização dessas consequências.
+\subsubsection{Tratamento do Desbalanceamento}
+A distribuição das classes foi considerada no treinamento por meio de pesos de classe, atribuindo maior peso às classes minoritárias. Os pesos utilizados foram 1,0000 para acidentes com vítimas feridas, 2,2195 para acidentes sem vítimas e 3,2952 para acidentes com vítimas fatais.
 
-Ao final do processamento, foram mantidas como variáveis preditoras categóricas o dia da semana, o trecho da BR, a causa e o tipo do acidente, a fase do dia, a condição meteorológica, o tipo de pista, a inclinação e a geometria horizontal da via. Como variáveis numéricas, foram utilizados o quilômetro, o volume de pedágio, o ICM e o indicador de fator humano. A variável \texttt{classificacao\_acidente} foi mantida como variável-alvo, e os registros sem informação para essa classificação foram removidos, produzindo o conjunto de dados utilizado nas etapas posteriores da metodologia.
+\subsubsection{Treinamento do CatBoost}
+O CatBoost foi selecionado para a classificação multiclasse por lidar nativamente com variáveis categóricas e apresentar resultados favoráveis em estudos de severidade de acidentes \cite{prokhorenkova2018catboost,samerei2024,xie2025}. O treinamento utilizou pesos de classe e early stopping monitorado no conjunto de validação.
 
-\section{General Information}
+\subsubsection{Otimização de Hiperparâmetros}
+Foram avaliadas 8 combinações de hiperparâmetros, variando profundidade, taxa de aprendizado e expoente dos pesos de classe. A configuração com maior F1-macro na validação foi selecionada: profundidade 8, taxa de aprendizado 0,06, expoente dos pesos 0,5, $L2$ leaf regularization igual a 8, random strength igual a 1, bagging temperature igual a 0 e 418 iterações, com F1-macro de validação igual a 0,5743.
 
-All full papers and posters (short papers) submitted to some SBC conference,
-including any supporting documents, should be written in English or in
-Portuguese. The format paper should be A4 with single column, 3.5 cm for upper
-margin, 2.5 cm for bottom margin and 3.0 cm for lateral margins, without
-headers or footers. The main font must be Times, 12 point nominal size, with 6
-points of space before each paragraph. Page numbers must be suppressed.
+\subsubsection{Avaliação do Modelo}
+O desempenho foi avaliado no conjunto de teste por acurácia, balanced accuracy, precisão, recall, F1-score macro, métricas por classe e matriz de confusão. A explicabilidade foi analisada por SHAP, considerando a média dos valores absolutos das contribuições entre as classes \cite{lundberg2017}. Para os gráficos, valores ausentes de icm e volume\_pedagio foram excluídos apenas da cópia destinada à visualização, mantendo-se os dados originais no treinamento e na avaliação.
 
-Full papers must respect the page limits defined by the conference.
-Conferences that publish just abstracts ask for \textbf{one}-page texts.
-
-\section{First Page} \label{sec:firstpage}
-
-The first page must display the paper title, the name and address of the
-authors, the abstract in English and ``resumo'' in Portuguese (``resumos'' are
-required only for papers written in Portuguese). The title must be centered
-over the whole page, in 16 point boldface font and with 12 points of space
-before itself. Author names must be centered in 12 point font, bold, all of
-them disposed in the same line, separated by commas and with 12 points of
-space after the title. Addresses must be centered in 12 point font, also with
-12 points of space after the authors' names. E-mail addresses should be
-written using font Courier New, 10 point nominal size, with 6 points of space
-before and 6 points of space after.
-
-The abstract and ``resumo'' (if is the case) must be in 12 point Times font,
-indented 0.8cm on both sides. The word \textbf{Abstract} and \textbf{Resumo},
-should be written in boldface and must precede the text.
-
-\section{CD-ROMs and Printed Proceedings}
-
-In some conferences, the papers are published on CD-ROM while only the
-abstract is published in the printed Proceedings. In this case, authors are
-invited to prepare two final versions of the paper. One, complete, to be
-published on the CD and the other, containing only the first page, with
-abstract and ``resumo'' (for papers in Portuguese).
-
-\section{Sections and Paragraphs}
-
-Section titles must be in boldface, 13pt, flush left. There should be an extra
-12 pt of space before each title. Section numbering is optional. The first
-paragraph of each section should not be indented, while the first lines of
-subsequent paragraphs should be indented by 1.27 cm.
-
-\subsection{Subsections}
-
-The subsection titles must be in boldface, 12pt, flush left.
-
-\section{Figures and Captions}\label{sec:figs}
-
-
-Figure and table captions should be centered if less than one line
-(Figure~\ref{fig:exampleFig1}), otherwise justified and indented by 0.8cm on
-both margins, as shown in Figure~\ref{fig:exampleFig2}. The caption font must
-be Helvetica, 10 point, boldface, with 6 points of space before and after each
-caption.
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.5\textwidth]{fig1.jpg}
-\caption{A typical figure}
-\label{fig:exampleFig1}
-\end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=.3\textwidth]{fig2.jpg}
-\caption{This figure is an example of a figure caption taking more than one
-  line and justified considering margins mentioned in Section~\ref{sec:figs}.}
-\label{fig:exampleFig2}
-\end{figure}
-
-In tables, try to avoid the use of colored or shaded backgrounds, and avoid
-thick, doubled, or unnecessary framing lines. When reporting empirical data,
-do not use more decimal digits than warranted by their precision and
-reproducibility. Table caption must be placed before the table (see Table 1)
-and the font used must also be Helvetica, 10 point, boldface, with 6 points of
-space before and after each caption.
+\section{Resultados e Discussão}
+\subsection{Desempenho do CatBoost}
+O conjunto final possui 187.348 registros. A distribuição das classes e as métricas gerais obtidas no conjunto de teste são apresentadas na Tabela~\ref{tab:metricas-gerais}.
 
 \begin{table}[ht]
 \centering
-\caption{Variables to be considered on the evaluation of interaction
-  techniques}
-\label{tab:exTable1}
-\includegraphics[width=.7\textwidth]{table.jpg}
+\caption{Distribuição das classes e métricas gerais no conjunto de teste.}
+\label{tab:metricas-gerais}
+\begin{tabular}{lrr}
+\hline
+\textbf{Medida} & \textbf{Valor absoluto} & \textbf{Percentual/valor} \\
+\hline
+Acidentes sem vítimas & 29.365 & 15,67\% \\
+Acidentes com vítimas feridas & 144.660 & 77,21\% \\
+Acidentes com vítimas fatais & 13.323 & 7,11\% \\
+\hline
+Acurácia & -- & 77,78\% \\
+Acurácia balanceada & -- & 55,50\% \\
+F1-score macro & -- & 57,21\% \\
+\hline
+\end{tabular}
 \end{table}
 
-\section{Images}
+As métricas de desempenho por classe são apresentadas na Tabela~\ref{tab:metricas-classes}. O melhor desempenho ocorreu na classe com vítimas feridas, enquanto as classes com vítimas fatais e sem vítimas apresentaram maior dificuldade para classificar. A diferença entre acurácia e acurácia balanceada evidencia o efeito do desbalanceamento sobre a avaliação global.
 
-All images and illustrations should be in black-and-white, or gray tones,
-excepting for the papers that will be electronically available (on CD-ROMs,
-internet, etc.). The image resolution on paper should be about 600 dpi for
-black-and-white images, and 150-300 dpi for grayscale images.  Do not include
-images with excessive resolution, as they may take hours to print, without any
-visible difference in the result. 
+\begin{table}[ht]
+\centering
+\caption{Desempenho do CatBoost por classe no conjunto de teste.}
+\label{tab:metricas-classes}
+\begin{tabular}{lrrrr}
+\hline
+\textbf{Classe} & \textbf{Suporte} & \textbf{Precisão} & \textbf{Recall} & \textbf{F1-score} \\
+\hline
+Sem vítimas & 2.936 & 54,95\% & 35,18\% & 42,90\% \\
+Com vítimas feridas & 14.466 & 83,43\% & 89,77\% & 86,48\% \\
+Com vítimas fatais & 1.333 & 42,98\% & 41,56\% & 42,26\% \\
+\hline
+\end{tabular}
+\end{table}
 
-\section{References}
+\subsection{Matriz de Confusão}
+A matriz de confusão, com linhas representando as classes reais e colunas as classes preditas, é apresentada na Figura~\ref{fig:matriz-confusao}.
 
-Bibliographic references must be unambiguous and uniform.  We recommend giving
-the author names references in brackets, e.g. \cite{knuth:84},
-\cite{boulic:91}, and \cite{smith:99}.
+\begin{figure}[ht]
+\centering
+\IfFileExists{confusion_matrix.png}{%
+    \includegraphics[width=0.85\linewidth]{confusion_matrix.png}%
+}{%
+    \fbox{\parbox{0.85\linewidth}{\centering\vspace{1.5cm}Placeholder: matriz de confusão\vspace{1.5cm}}}%
+}
+\caption{Matriz de confusão do CatBoost no conjunto de teste.}
+\label{fig:matriz-confusao}
+\end{figure}
+O maior número de acertos ocorreu na classe com vítimas feridas, com 12.986 ocorrências. As principais confusões envolveram vítimas fatais classificadas como feridas (726 casos), vítimas feridas classificadas como fatais (686 casos) e acidentes sem vítimas classificados como feridos (1.854 casos), indicando maior confusão entre classes de severidade adjacentes.
 
-The references must be listed using 12 point font size, with 6 points of space
-before each reference. The first line of each reference should not be
-indented, while the subsequent should be indented by 0.5 cm.
+\subsection{Importância das Características}
+A importância global das características segundo o CatBoost e os valores médios absolutos de SHAP são apresentados conjuntamente na Tabela~\ref{tab:importancia-shap}.
 
+As três características mais importantes — tipo\_acidente, br e causa\_acidente — concentraram conjuntamente aproximadamente 57,83\% da importância global. Fase\_dia, tipo\_pista e inclinacao também apresentaram contribuições relevantes. Entre as variáveis de exposição e infraestrutura, volume\_pedagio, km e icm responderam por 4,26\%, 3,61\% e 2,87\%, respectivamente, enquanto fator\_humano apresentou 1,03\%. Esses valores expressam importância preditiva global; isoladamente, não indicam a direção do efeito nem permitem estabelecer causalidade.
+
+A análise SHAP complementa essa medida ao mostrar a direção e a magnitude das contribuições para cada classe. A Tabela~\ref{tab:importancia-shap} apresenta a média dos valores absolutos de SHAP por classe, e a Figura~\ref{fig:shap-summary-fatal} apresenta o Summary Plot para acidentes com vítimas fatais. Valores positivos favorecem a classe analisada, enquanto valores negativos atuam em sentido oposto; para variáveis numéricas e binárias, valores altos aparecem em vermelho e baixos em azul.
+
+\begin{table}[ht]
+\centering
+\scriptsize
+\caption{Importância global segundo o CatBoost e média dos valores absolutos de SHAP por classe.}
+\label{tab:importancia-shap}
+\begin{tabular}{lrrrrr}
+\hline
+\textbf{Característica} & \textbf{CatBoost (\%)} & \textbf{SHAP global} & \textbf{Feridas} & \textbf{Sem vítimas} & \textbf{Fatais} \\
+\hline
+tipo\_acidente & 26,93 & 0,2018 & 0,1251 & 0,2792 & 0,2010 \\
+br & 16,01 & 0,1461 & 0,1582 & 0,0876 & 0,1926 \\
+causa\_acidente & 14,90 & 0,1297 & 0,0919 & 0,1538 & 0,1432 \\
+fase\_dia & 7,84 & 0,0956 & 0,1123 & 0,0531 & 0,1214 \\
+tipo\_pista & 6,91 & 0,0391 & 0,0295 & 0,0441 & 0,0439 \\
+inclinacao & 5,41 & 0,0546 & 0,0291 & 0,0596 & 0,0751 \\
+dia\_semana & 5,08 & 0,0354 & 0,0357 & 0,0465 & 0,0239 \\
+volume\_pedagio & 4,26 & 0,0329 & 0,0418 & 0,0263 & 0,0307 \\
+condicao\_meteorologica & 4,22 & 0,0292 & 0,0165 & 0,0342 & 0,0367 \\
+km & 3,61 & 0,0114 & 0,0096 & 0,0120 & 0,0126 \\
+icm & 2,87 & 0,0182 & 0,0215 & 0,0206 & 0,0125 \\
+fator\_humano & 1,03 & 0,0118 & 0,0145 & 0,0049 & 0,0159 \\
+reta & 0,93 & 0,0102 & 0,0044 & 0,0132 & 0,0130 \\
+\hline
+\end{tabular}
+\end{table}
+
+Para volume\_pedagio, valores altos apresentaram contribuições predominantemente negativas na classe fatal e positivas na classe ferida, enquanto permaneceram próximos do centro na classe sem vítimas. Para fator\_humano, o valor 1 contribuiu positivamente na classe fatal, negativamente na classe ferida e próximo de zero na classe sem vítimas; sua magnitude global foi baixa (0,0118). Para icm, valores maiores, que representam pior condição do pavimento, contribuíram negativamente nas classes fatal e ferida e apresentaram tendência positiva na classe sem vítimas. Cerca de 41\% das observações possuíam icm ausente; a filtragem ocorreu apenas na cópia destinada aos gráficos SHAP, sem alterar treinamento ou avaliação.
+
+Entre as características geométricas, inclinacao apresentou a maior magnitude média absoluta na classe fatal (0,0751), tipo\_pista teve magnitudes próximas nas classes sem vítimas e fatais e reta apresentou contribuição discreta. Km apresentou contribuição preditiva mensurável, mas pode capturar heterogeneidade espacial dos trechos, não devendo ser interpretado como efeito causal. Os Summary Plots não demonstram, isoladamente, interações entre características; essa hipótese requer análises específicas.
+
+\begin{figure}[ht]
+\centering
+\IfFileExists{shap_summary_com_vitimas_fatais.png}{%
+    \includegraphics[width=\linewidth]{shap_summary_com_vitimas_fatais.png}%
+}{%
+    \fbox{\parbox{0.9\linewidth}{\centering\vspace{1.5cm}Placeholder: SHAP Summary Plot para vítimas fatais\vspace{1.5cm}}}%
+}
+\caption{SHAP Summary Plot para a classe com vítimas fatais.}
+\label{fig:shap-summary-fatal}
+\end{figure}
+
+\subsection{Comparação entre Análise Estatística e Importância do Modelo}
+A comparação entre associação estatística e importância preditiva mostra convergência para algumas variáveis. tipo\_acidente, br e causa\_acidente apresentaram simultaneamente os maiores valores de V de Cramér e as maiores importâncias no CatBoost. O V de Cramér e o $\epsilon^2$ medem intensidade de associação em análises estatísticas, enquanto a importância do modelo reflete contribuição para a predição no contexto conjunto das demais características.
+
+Essa diferença é ilustrada por volume\_pedagio, que apresentou $\epsilon^2=0,0035$ e importância de 4,26\%; por km, com $\epsilon^2=0,0008$ e importância de 3,61\%; e por icm, com $\epsilon^2=0,0002$ e importância de 2,87\%. Para fator\_humano, o V de Cramér foi 0,1109, enquanto sua importância global no CatBoost foi 1,03\%. Os resultados mostram que associação bivariada e importância preditiva respondem a perguntas distintas e complementares.
+
+\subsection{Limitações}
+As principais limitações envolvem a heterogeneidade e possíveis inconsistências entre as bases PRF, DNIT e ANTT, além da presença de aproximadamente 41\% de valores ausentes em volume\_pedagio e icm. A definição de fator\_humano depende da classificação das causas registradas. A variável km pode capturar heterogeneidade espacial, e dependências espaciais ou temporais podem afetar a generalização; validações adicionais devem controlar essas dependências. As análises estatísticas e SHAP descrevem associações e contribuições preditivas, não causalidade. A aplicação do modelo a outros contextos requer revalidação e, se necessário, recalibração.
+
+\section{Conclusão}
+\subsection{Principais Resultados}
+O CatBoost classificou a severidade dos acidentes em três classes, alcançando 77,78\% de acurácia, 55,50\% de balanced accuracy e 57,21\% de F1-score macro. O melhor desempenho ocorreu para acidentes com vítimas feridas (F1=86,48\%), enquanto as classes fatal e sem vítimas apresentaram F1 de 42,26\% e 42,90\%, respectivamente. tipo\_acidente, br e causa\_acidente foram as características de maior importância global, e a comparação com as análises estatísticas mostrou que associação marginal e contribuição preditiva não são equivalentes.
+
+\subsection{Contribuições}
+As principais contribuições são: (i) integração de dados da PRF, DNIT e ANTT; (ii) desenvolvimento de um classificador CatBoost com explicabilidade por SHAP; e (iii) comparação entre medidas estatísticas de associação e importância preditiva, permitindo uma interpretação complementar dos fatores relacionados à severidade. Como continuidade, recomenda-se investigar validação espacial e temporal e métodos específicos para explicar interações entre características.
+
+\section{Referências}
 \bibliographystyle{sbc}
 \bibliography{sbc-template}
-
 \end{document}

@@ -1,0 +1,136 @@
+\begin{thebibliography}{}
+
+\bibitem[Agresti 2007]{agresti2007}
+Agresti, A. (2007).
+\newblock {\em An Introduction to Categorical Data Analysis}.
+\newblock John Wiley \& Sons, Hoboken, New Jersey, 2nd edition.
+
+\bibitem[{Agência Nacional de Transportes Terrestres}
+  2026]{antt_dados_abertos}
+{Agência Nacional de Transportes Terrestres} (2026).
+\newblock Volume de tráfego nas praças de pedágio.
+\newblock Portal de Dados Abertos da ANTT.
+\newblock Conjunto de dados com atualização mensal. Acesso em: 19 ago. 2026.
+
+\bibitem[Bartholomeu and Caixeta~Filho 2008]{bartholomeu2008}
+Bartholomeu, D.~B. and Caixeta~Filho, J.~V. (2008).
+\newblock Impactos econômicos e ambientais decorrentes do estado de
+  conservação das rodovias brasileiras: um estudo de caso.
+\newblock {\em Revista de Economia e Sociologia Rural}, 46(3):703--738.
+
+\bibitem[Brown et~al. 2001]{brown2001interval}
+Brown, L.~D., Cai, T.~T., and DasGupta, A. (2001).
+\newblock Interval estimation for a binomial proportion.
+\newblock {\em Statistical science}, pages 101--117.
+
+\bibitem[Carmo and Raia~Junior 2019]{carmo2019}
+Carmo, C.~L. and Raia~Junior, A.~A. (2019).
+\newblock Segurança em rodovias inseridas em áreas urbanas na região sul do
+  brasil.
+\newblock {\em urbe. Revista Brasileira de Gestão Urbana}, 11:e20170182.
+
+\bibitem[Costa~Júnior and Santos~Júnior 2022]{costa2022}
+Costa~Júnior, E. E.~d. and Santos~Júnior, L.~C. (2022).
+\newblock Risco de morte em acidentes ocorridos nas rodovias federais
+  brasileiras.
+\newblock {\em Refas - Revista Fatec Zona Sul}, 9(2):1--22.
+
+\bibitem[{Departamento Nacional de Infraestrutura de Transportes}
+  2023]{dnit_icm}
+{Departamento Nacional de Infraestrutura de Transportes} (2023).
+\newblock {ICM}: Índice de condição da manutenção.
+\newblock Portal Gov.br.
+\newblock Atualizado em: 9 out. 2024. Acesso em: 19 ago. 2026.
+
+\bibitem[Field 2009]{field2009discovering}
+Field, A. (2009).
+\newblock {\em Discovering Statistics Using SPSS}.
+\newblock SAGE Publications, London, 3rd edition.
+
+\bibitem[James et~al. 2023]{james2023islp}
+James, G., Witten, D., Hastie, T., Tibshirani, R., and Taylor, J. (2023).
+\newblock {\em An Introduction to Statistical Learning: with Applications in
+  Python}.
+\newblock Springer.
+
+\bibitem[Kim 2018]{kim2018statistical}
+Kim, H.-Y. (2018).
+\newblock Statistical notes for clinical researchers: covariance and
+  correlation.
+\newblock {\em Restorative dentistry \& endodontics}, 43(1):e4.
+
+\bibitem[Kruskal and Wallis 1952]{kruskal1952}
+Kruskal, W.~H. and Wallis, W.~A. (1952).
+\newblock Use of ranks in one-criterion variance analysis.
+\newblock {\em Journal of the American Statistical Association},
+  47(260):583--621.
+
+\bibitem[Lundberg and Lee 2017]{lundberg2017}
+Lundberg, S.~M. and Lee, S.-I. (2017).
+\newblock A unified approach to interpreting model predictions.
+\newblock In {\em Advances in Neural Information Processing Systems},
+  volume~30, pages 4765--4774. Curran Associates, Inc.
+
+\bibitem[Navarro 2015]{navarro2015learning}
+Navarro, D. (2015).
+\newblock Learning statistics with r: A tutorial for psychology students and
+  other beginners (version 0.6).
+\newblock {\em University of New South Wales}.
+
+\bibitem[{Polícia Rodoviária Federal} 2026]{prf_dados_abertos}
+{Polícia Rodoviária Federal} (2026).
+\newblock Dados abertos da prf.
+\newblock Portal Gov.br.
+\newblock Conjuntos de dados de acidentes agrupados por ocorrência. Acesso em:
+  19 ago. 2026.
+
+\bibitem[Prokhorenkova et~al. 2018]{prokhorenkova2018catboost}
+Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A.~V., and Gulin, A.
+  (2018).
+\newblock Catboost: unbiased boosting with categorical features.
+\newblock In Bengio, S., Wallach, H., Larochelle, H., Grauman, K.,
+  Cesa-Bianchi, N., and Garnett, R., editors, {\em Advances in Neural
+  Information Processing Systems}, volume~31. Curran Associates, Inc.
+
+\bibitem[Samerei et~al. 2024]{samerei2024}
+Samerei, S.~A., Aghabayk, K., and Montella, A. (2024).
+\newblock Analyzing pile-up crash severity: Insights from real-time traffic and
+  environmental factors using ensemble machine learning and shapley additive
+  explanations method.
+\newblock {\em Safety}, 10(1):22.
+
+\bibitem[{scikit-learn developers} ]{sklearn_metrics}
+{scikit-learn developers}.
+\newblock Metrics and scoring: quantifying the quality of predictions.
+\newblock \url{https://scikit-learn.org/stable/modules/model_evaluation.html}.
+\newblock Acesso em: 1 set. 2026.
+
+\bibitem[Spearman 1904]{spearman1904}
+Spearman, C. (1904).
+\newblock The proof and measurement of association between two things.
+\newblock {\em The American Journal of Psychology}, 15(1):72--101.
+
+\bibitem[Tomczak and Tomczak 2014]{tomczak2014need}
+Tomczak, M. and Tomczak, E. (2014).
+\newblock The need to report effect size estimates revisited. an overview of
+  some recommended measures of effect size.
+\newblock {\em Trends in Sport Sciences}, 21(1):19--25.
+
+\bibitem[Tukey et~al. 1977]{tukey1977eda}
+Tukey, J.~W. et~al. (1977).
+\newblock {\em Exploratory data analysis}, volume~2.
+\newblock Addison-wesley Reading, MA.
+
+\bibitem[{World Health Organization} 2023]{who2023roadsafety}
+{World Health Organization} (2023).
+\newblock {\em Global Status Report on Road Safety 2023}.
+\newblock World Health Organization, Geneva.
+\newblock Acesso em: 19 ago. 2026.
+
+\bibitem[Xie et~al. 2025]{xie2025}
+Xie, Z., Ma, Y., Khattak, A.~J., Chen, S., and Liu, H. (2025).
+\newblock An interpretable machine learning-based framework for fatal traffic
+  accident prediction and causal analysis.
+\newblock {\em Digital Transportation and Safety}, 4(4):215--226.
+
+\end{thebibliography}
